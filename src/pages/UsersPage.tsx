@@ -61,7 +61,7 @@ export const UsersPage = () => {
 
     useEffect(() => {
         fetchUsers(queryStringCreator(pagination));
-    }, []);
+    }, [queryStringCreator, fetchUsers, pagination]);
 
     useEffect(() => {
         error !== null && addToast("Ошибка", `${error}`, "danger", 7000);
