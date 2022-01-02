@@ -50,8 +50,8 @@ export const Todos: React.FC = () => {
 
   return (
     <div className={cn({
-        ['bg-dark']: darkMode,
-        ['text-white']: darkMode,
+        'bg-dark': darkMode,
+        'text-white': darkMode,
       }
                     )}
       style={{minHeight: "100vh", padding: "80px 0"}}>

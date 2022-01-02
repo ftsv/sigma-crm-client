@@ -32,7 +32,7 @@ export const CategoryPage = () => {
 
   const editCategory = useCallback(async (category: ICategory) => {
     try {
-      const editedCategory = await request(`/api/category/${category._id}`, 'PUT', {...category},{
+      await request(`/api/category/${category._id}`, 'PUT', {...category},{
           Authorization: `Bearer ${auth.token}` 
       });
       addToast("Выполнено", `Категория ${category.title} изменена!`, "success", 7000)
@@ -61,11 +61,14 @@ export const CategoryPage = () => {
         fetchCategories()
     }, []);
 
+    useEffect(() => {
+        error !== null && addToast('Ошибка', `${error}`, 'danger',7000);
+    }, [error, addToast]);
 
   return (
     <div className={cn({
-                        ['bg-dark']: darkMode,
-                        ['text-white']: darkMode,
+                        'bg-dark': darkMode,
+                        'text-white': darkMode,
                     }
                     )}
       style={{minHeight: "100vh", padding: "80px 0"}}

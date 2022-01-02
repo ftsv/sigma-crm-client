@@ -22,6 +22,7 @@ const NavbarComp = () => {
   const { darkMode, toggleDarkMode } = useContext(ThemeContext)
   // const auth = useAuth();
   const navigate = useNavigate();
+  const menuStyle = darkMode ? 'dark' : 'light';
 
   const handleLogout = () => {
     auth.logout();
@@ -29,7 +30,7 @@ const NavbarComp = () => {
   }
 
   return (
-  <Navbar variant={darkMode ? "dark" : "light"} bg={darkMode ? "dark" : "light"} expand="lg" fixed="top">
+  <Navbar variant={menuStyle} bg={menuStyle} expand="lg" fixed="top">
     <Container>
       <Navbar.Brand href="">ООО "Шнырь"</Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -44,21 +45,21 @@ const NavbarComp = () => {
           <NavDropdown 
             title={<span><GraphUpArrow /> Отчеты</span>} 
             id="reports-nav-dropdown" 
-            menuVariant={darkMode ? "dark" : "light"}
+            menuVariant={menuStyle}
           >
             <NavDropdown.Item href="">ВОРОНКА ПРОДАЖ</NavDropdown.Item>
           </NavDropdown>
           <NavDropdown 
             title={<span><FileEarmarkText /> Справочники</span>} 
             id="data-nav-dropdown" 
-            menuVariant={darkMode ? "dark" : "light"}
+            menuVariant={menuStyle}
           >
             <NavDropdown.Item href="">КЛИЕНТЫ</NavDropdown.Item>
           </NavDropdown>
           <NavDropdown 
             title={<span><Gear /> Настройки</span>} 
             id="preferences-nav-dropdown" 
-            menuVariant={darkMode ? "dark" : "light"}
+            menuVariant={menuStyle}
           >
             <NavDropdown.Item href="/users" as={Link} to="/users">Пользователи</NavDropdown.Item>
             <NavDropdown.Item href="">РОЛИ</NavDropdown.Item>
@@ -68,13 +69,14 @@ const NavbarComp = () => {
         </Nav>
         <button 
           className="btn btn-sm"
-          onClick={toggleDarkMode}>
+          onClick={toggleDarkMode}
+        >
           {darkMode ? <BrightnessHighFill fill="white" /> : <MoonFill />}
-          </button>
+        </button>
         <NavDropdown
           title={<span><PersonCircle size={30}/> {auth.email}</span>}
           id="basic-nav-dropdown"
-          menuVariant={darkMode ? "dark" : "light"}
+          menuVariant={menuStyle}
           menuRole=""
         >
         <NavDropdown.Item href="/profile" as={Link} to="/profile">Профиль</NavDropdown.Item>

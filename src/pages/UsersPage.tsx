@@ -1,5 +1,5 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
-// import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useContext, useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { ThemeContext } from '../context/ThemeContext';
 import { ToastsContext } from '../context/ToastsContext';
@@ -8,64 +8,63 @@ import { Spinner } from 'react-bootstrap';
 import { IUser } from '../types/User';
 import UserList from '../components/UserList';
 import cn from 'classnames';
+import { Pagination } from '../components/Pagination';
 
 export const UsersPage = () => {
     const auth = useContext( AuthContext );
     const { darkMode } = useContext(ThemeContext);
     const { addToast } = useContext(ToastsContext);
-    // const location = useLocation();
+    const location = useLocation();
     // const navigate = useNavigate();
     const { request, error, loading } = useHttp();
     const [users, setUsers] = useState<IUser[]>([]);
-    const [pagination, setPagination] = useState({page: 0, limit: 10, total: 21, pages: 1, skip: 0}); // возможно необходимо сделать контекст фильтра в localStorage для первичного отображения
-    console.log("///// UserPage - Render :::::::: ");
+    const [pagination, setPagination] = useState({page: 1, limit: 10, total: 0, pages: 0, skip: 0}); // возможно необходимо сделать контекст фильтра в localStorage для первичного отображения
 
-    const fetchUsers = useCallback(async (queryString = "") => {
-        try {
-            const {pagination, users} = await request(`/api/user/pagination${queryString}`,'GET', null, {
-                Authorization: `Bearer ${auth.token}` 
-            });
-
-            setPagination(pagination);
-            setUsers(users);
-        } catch (e: any) {
-            addToast("Ошибка", `${e}`, "danger", 7000);
-        }
-    },[auth.token, request,addToast])
 
 
     //=======вариант автоматической пагинации (блок в конце и observer)
-    //=======вариант
+    //=======вариант с ручным переключением
 
-    const queryStringCreator = useCallback((queryObject: any) => {
-        let queryParams = "?";
 
-        for (let key in queryObject) {
-            if (key === Object.keys(queryObject)[0]) {
-                queryParams += (`${key}=${queryObject[key]}`);
-            } else if (typeof queryObject[key] === "number" || typeof queryObject[key] === "string" ) {
-                queryParams += (`&${key}=${queryObject[key]}`);
+    const queryHandler = (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
+        setPagination({...pagination, [e.target.name]: parseInt(e.target.value) });
+    };
+
+    useEffect(() => {
+        error !== null && addToast('Ошибка', `${error}`, 'danger',7000);
+    }, [error, addToast]);
+
+    useEffect(() => {
+        // make hook for queryString
+        const queryStringCreator = (queryObject: any) => {
+            let queryParams = "?";
+            for (let key in queryObject) {
+                if (key === Object.keys(queryObject)[0]) {
+                    queryParams += (`${key}=${queryObject[key]}`);
+                } else if (typeof queryObject[key] === 'number' || typeof queryObject[key] === 'string' ) {
+                    queryParams += (`&${key}=${queryObject[key]}`);
+                }
             }
+
+            return queryParams;
         }
 
-        return queryParams;
-    }, [])
-
-    const queryHandler = useCallback((e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
-        let queryState = {...pagination, [e.target.name]: e.target.name !== "page" ? parseInt(e.target.value) : parseInt(e.target.value) - 1 };
-        const queryParams = queryStringCreator(queryState);
-        
-        // navigate(`/users${queryParams}`, {replace: true});
-        fetchUsers(queryParams);
-    }, [fetchUsers,queryStringCreator, pagination]);
-
-    useEffect(() => {
-        fetchUsers(queryStringCreator(pagination));
-    }, [queryStringCreator, fetchUsers, pagination]);
-
-    useEffect(() => {
-        error !== null && addToast("Ошибка", `${error}`, "danger", 7000);
-    }, [error, addToast])
+        const fetchUsers = async () => {
+            try {
+                const {pagination, users} = await request(`/api/user/pagination${location.search}`,'GET', null, {
+                    Authorization: `Bearer ${auth.token}` 
+                });
+                setPagination(pagination);
+                setUsers(users);
+            } catch (e: any) {
+                addToast('Ошибка', `${e}`, 'danger', 7000);
+            }
+        }
+        let queryString = queryStringCreator(pagination);
+        location.search = queryString;
+        fetchUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [pagination.page, pagination.limit]);
 
     return (
         <div
@@ -77,22 +76,13 @@ export const UsersPage = () => {
         >
             <div className="container" style={{marginTop: "30px"}}>
                 <div className="d-flex justify-content-between align-items-center">
-                    <button 
-                        className={cn("btn", "btn-sm", {
-                            "btn-outline-primary": !darkMode,
-                            "btn-primary": darkMode,
-                            })}
-                        onClick={() => fetchUsers(queryStringCreator(pagination))}
-                    >
-                        Получить список пользователей
-                    </button>
                     <div>
                         <span>{`общее количество: ${pagination.total} `}</span>
                         <span>страница № </span>
                         <input
                             type="number"
                             name="page"
-                            value={pagination.page + 1}
+                            value={pagination.page}
                             min={1}
                             max={pagination.pages}
                             onChange={(e) => queryHandler(e)}
@@ -111,12 +101,17 @@ export const UsersPage = () => {
                         </select>
                     </div>
                 </div>
-            
+                <div>
+                    <Pagination pagination={pagination} setPagination={setPagination} />
+                </div>
                 {loading 
                     ? (<div className="container justify-content-center" style={{marginTop: "20px"}}>
                         <Spinner animation="border" variant="secondary" />
                     </div>)
                     : (users && users.length) && <UserList users={users} skip={pagination.skip} /> }
+                </div>
+                <div>
+                    <Pagination pagination={pagination} setPagination={setPagination} />
                 </div>
         </div>
     

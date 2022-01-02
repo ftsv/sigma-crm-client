@@ -7,27 +7,21 @@ import cn from 'classnames';
 
 interface UserListProps {
   users: IUser[];
-  skip?: number
+  skip: number
 }
 
 const UserList: React.FC<UserListProps> = React.memo(({users, skip}) => {   
   const {darkMode} = useContext(ThemeContext);
 
-  if (!users.length){
-    return (
-      <tr>
-          <td>{" "}</td>
-          <td>{" "}</td>
-          <td>{" "}</td>
-          <td>{" "}</td>
-      </tr>
-    )}
+  if (!users.length) {
+    return null;
+  }
 
   return (
     <div className="container" style={{marginTop: "20px"}}>
         <table className={cn("table", "table-sm", "table-hover", "table-bordered", 
             {
-                ['table-dark']: darkMode,
+                'table-dark': darkMode,
             }
         )}>
           <thead>
@@ -41,7 +35,7 @@ const UserList: React.FC<UserListProps> = React.memo(({users, skip}) => {
           <tbody>
             {users.map((user, i: number) => (
               <tr key={user.email}>
-                  <td>{(skip&& skip > 0) ? skip + i + 1 : i + 1 }</td>
+                  <td>{(skip && skip > 0) ? (skip + i + 1) : (i + 1) }</td> {/* array start from 0 need + 1 */}
                   <td>{(user.email.length > 40)
                   ? (<OverlayTrigger overlay={<Tooltip id="tooltip-disabled">{user.email}</Tooltip>}>
                       <span>{user.email.slice(0, 37) + "..."}</span>
