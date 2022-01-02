@@ -1,0 +1,7 @@
+.navbar__module {
+  background: linear-gradient(90deg, rgb(194, 73, 73), rgb(253, 204, 204)) !important;
+}
+
+.navbar__item {
+  color: rgba(0, 0, 0, .55) !important;
+}
