@@ -1,4 +1,7 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import queryStringCreator from '../services/query-string-creator';
+
 import cn from 'classnames';
 import { AuthContext } from '../context/AuthContext';
 import { ThemeContext } from '../context/ThemeContext';
@@ -8,15 +11,30 @@ import { useHttp } from '../hooks/useHttp';
 import { ICategory } from '../types/Category';
 import { CategoryList } from '../components/CategoryList';
 import { Spinner } from 'react-bootstrap';
+import { Pagination } from '../components/Pagination';
 
 export const CategoryPage = () => {
   const auth = useContext( AuthContext );
   const { darkMode } = useContext(ThemeContext);
   const { addToast } = useContext(ToastsContext);
+  const location = useLocation();
   const { request, error, loading } = useHttp();
   const [categories, setCategories] = useState<ICategory[]>([]);
+  const [pagination, setPagination] = useState({page: 1, limit: 10, total: 0, pages: 0, skip: 0}); // возможно необходимо сделать контекст фильтра в localStorage для первичного отображения
 
-  const addCategory = useCallback(async (category) => {
+  const fetch = async () => {
+          try {
+              const {pagination, categories} = await request(`/api/category/all${location.search}`,'GET', null, {
+                  Authorization: `Bearer ${auth.token}` 
+              });
+              setPagination(pagination);
+              setCategories(categories);
+          } catch (e: any) {
+              addToast('Ошибка', `${e}`, 'danger', 7000);
+          }
+      }
+
+  const addCategory = React.useCallback(async (category) => {
     try {
       await request('/api/category/add', 'POST', {...category},{
                 Authorization: `Bearer ${auth.token}` 
@@ -27,10 +45,10 @@ export const CategoryPage = () => {
         console.log(e);
     }
 
-    fetchCategories();
+    fetch();
   },[auth.token, request])
 
-  const editCategory = useCallback(async (category: ICategory) => {
+  const editCategory = React.useCallback(async (category: ICategory) => {
     try {
       await request(`/api/category/${category._id}`, 'PUT', {...category},{
           Authorization: `Bearer ${auth.token}` 
@@ -41,29 +59,18 @@ export const CategoryPage = () => {
         console.log(e);
     }
     
-    fetchCategories();
+    fetch();
   },[auth.token, request])
 
-  const fetchCategories = useCallback(async () => {
-        try {
-            const fetched = await request('/api/category/all', 'GET', null, {
-                Authorization: `Bearer ${auth.token}` 
-            });
+  React.useEffect(() => {
+      error !== null && addToast('Ошибка', `${error}`, 'danger',7000);
+  }, [error, addToast]);
 
-            setCategories(fetched);
-        } catch (e: any) {
-            addToast("Ошибка", `${e}`, "danger", 7000);
-        console.log(e);
-        }
-    },[auth.token, request])
-
-    useEffect(() => {
-        fetchCategories()
-    }, []);
-
-    useEffect(() => {
-        error !== null && addToast('Ошибка', `${error}`, 'danger',7000);
-    }, [error, addToast]);
+  React.useEffect(() => {
+      location.search = queryStringCreator(pagination);
+      fetch();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pagination?.page, pagination?.limit]);
 
   return (
     <div className={cn({
@@ -77,15 +84,27 @@ export const CategoryPage = () => {
         <ModalCategory darkMode={darkMode} addCategory={addCategory} />
         <div>
           {loading 
-                    ? (<div className="container justify-content-center" style={{marginTop: "20px"}}>
-                        <Spinner animation="border" variant="secondary" />
-                    </div>)
-                    : <CategoryList 
-                        darkMode={darkMode} 
-                        categories={categories} 
-                        editCategory={editCategory} 
-                        fetchCategories={fetchCategories}
-                      />}
+            ? (<div className="container justify-content-center" style={{marginTop: "20px"}}>
+                <Spinner animation="border" variant="secondary" />
+              </div>
+            )
+            : (<div>
+                <Pagination
+                  pagination={pagination}
+                  setPagination={setPagination}
+                  darkMode={darkMode}
+                  total={true}
+                  limit={true}
+                />
+                <CategoryList 
+                  darkMode={darkMode} 
+                  categories={categories} 
+                  editCategory={editCategory} 
+                  fetchCategories={fetch}
+                />
+              </div>
+            )
+          }
         </div>
       </div>
     </div>

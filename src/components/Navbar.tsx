@@ -15,7 +15,7 @@ import {
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { ThemeContext } from '../context/ThemeContext';
-import './Navbar.css';
+
 
 const NavbarComp = () => {
   const auth = useContext(AuthContext);
@@ -36,13 +36,13 @@ const NavbarComp = () => {
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="me-auto my-2 my-lg-0">
-          <Nav.Link href="">
+          {/* <Nav.Link href="">
             {<span><Calendar3 /> ПЛАНИРОВЩИК</span>}
-          </Nav.Link>
+          </Nav.Link> */}
           <Nav.Link  href="/todos" as={Link} to="/todos" className="nav-link">
               {<span><ListTask /> Задачи</span>}
           </Nav.Link>
-          <NavDropdown 
+          {/* <NavDropdown 
             title={<span><GraphUpArrow /> Отчеты</span>} 
             id="reports-nav-dropdown" 
             menuVariant={menuStyle}
@@ -55,16 +55,16 @@ const NavbarComp = () => {
             menuVariant={menuStyle}
           >
             <NavDropdown.Item href="">КЛИЕНТЫ</NavDropdown.Item>
-          </NavDropdown>
+          </NavDropdown> */}
           <NavDropdown 
             title={<span><Gear /> Настройки</span>} 
             id="preferences-nav-dropdown" 
             menuVariant={menuStyle}
           >
             <NavDropdown.Item href="/users" as={Link} to="/users">Пользователи</NavDropdown.Item>
-            <NavDropdown.Item href="">РОЛИ</NavDropdown.Item>
+            {/* <NavDropdown.Item href="">РОЛИ</NavDropdown.Item> */}
             <NavDropdown.Item href="/category" as={Link} to="/category">Категории</NavDropdown.Item>
-            <NavDropdown.Item href="">ШАБЛОНЫ</NavDropdown.Item>
+            {/* <NavDropdown.Item href="">ШАБЛОНЫ</NavDropdown.Item> */}
           </NavDropdown>
         </Nav>
         <button 

@@ -33,10 +33,21 @@ export const ProfilePage = () => {
 
                 <div>
                     <span>Пагинация </span>
-                    <Pagination pagination={pagination} setPagination={setPagination} />
+                    <Pagination 
+                        pagination={pagination} 
+                        setPagination={setPagination} 
+                        darkMode={darkMode} 
+                    />
                     <span>Пагинация окончена</span>
                     <div>
-                        <input type="number" name="page" value={pagination.page} min={1} max={pagination.pages} onChange={e => handlerPagination(e)} />
+                        <input 
+                            type="number" 
+                            name="page" 
+                            value={pagination.page} 
+                            min={1} max={pagination.pages} 
+                            onChange={e => handlerPagination(e)} 
+                            className="bg-dark text-white" 
+                        />
                         <input type="number" name="pages" value={pagination.pages} min={1} onChange={e => handlerPagination(e)} />
                     </div>
                 </div>
