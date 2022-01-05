@@ -18,11 +18,13 @@ const ToastMessage = (props: ToastListProps) => {
 
   return (
     <ToastContainer position={position} >
-      {toasts.length && toasts.map(toast => (
+      {toasts?.length
+      ? toasts.map(toast => (
         <div key={toast.id}>
           <ToastItem toast={toast} />
         </div>)
-      )}
+      )
+      : null}
     </ToastContainer>
   )
 }
