@@ -5,13 +5,13 @@ import ToastMessage from './components/ToastMessage/ToastMessage';
 import { AuthContext } from './context/AuthContext';
 import ThemeProvider from './context/ThemeContext';
 import ToastsProvider, { ToastsContext } from './context/ToastsContext';
-import { useRoutes } from './routes';
+import { Routing } from './router';
 
 
-const App = () => {
+const App: React.FC = (): JSX.Element => {
   const { token } = useContext(AuthContext);
   const isAuth = !!token;
-  const routes = useRoutes(isAuth);
+  // const routes = useRouting(isAuth);
   
   return (
     <>
@@ -19,7 +19,7 @@ const App = () => {
           <ToastsProvider>
               <BrowserRouter>
                 {isAuth && <NavbarComp />}
-                {routes}
+                <Routing />
               </BrowserRouter>
               <ToastsContext.Consumer>
                 {value => <ToastMessage 

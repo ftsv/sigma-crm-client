@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import queryStringCreator from '../services/query-string-creator';
-
 import cn from 'classnames';
+
 import { AuthContext } from '../context/AuthContext';
 import { ThemeContext } from '../context/ThemeContext';
 import { ToastsContext } from '../context/ToastsContext';
@@ -46,7 +46,7 @@ export const CategoryPage = () => {
     }
 
     fetch();
-  },[auth.token, request])
+  },[])
 
   const editCategory = React.useCallback(async (category: ICategory) => {
     try {
@@ -60,7 +60,7 @@ export const CategoryPage = () => {
     }
     
     fetch();
-  },[auth.token, request])
+  },[])
 
   React.useEffect(() => {
       error !== null && addToast('Ошибка', `${error}`, 'danger',7000);
@@ -73,39 +73,31 @@ export const CategoryPage = () => {
   }, [pagination?.page, pagination?.limit]);
 
   return (
-    <div className={cn({
-                        'bg-dark': darkMode,
-                        'text-white': darkMode,
-                    }
-                    )}
-      style={{minHeight: "100vh", padding: "80px 0"}}
-    >
-      <div className="container">
-        <ModalCategory darkMode={darkMode} addCategory={addCategory} />
-        <div>
-          {loading 
-            ? (<div className="container justify-content-center" style={{marginTop: "20px"}}>
-                <Spinner animation="border" variant="secondary" />
-              </div>
-            )
-            : (<div>
-                <Pagination
-                  pagination={pagination}
-                  setPagination={setPagination}
-                  darkMode={darkMode}
-                  total={true}
-                  limit={true}
-                />
-                <CategoryList 
-                  darkMode={darkMode} 
-                  categories={categories} 
-                  editCategory={editCategory} 
-                  fetchCategories={fetch}
-                />
-              </div>
-            )
-          }
-        </div>
+    <div className="container">
+      <ModalCategory darkMode={darkMode} addCategory={addCategory} />
+      <div>
+        {loading 
+          ? (<div className="container justify-content-center" style={{marginTop: "20px"}}>
+              <Spinner animation="border" variant="secondary" />
+            </div>
+          )
+          : (<div>
+              <Pagination
+                pagination={pagination}
+                setPagination={setPagination}
+                darkMode={darkMode}
+                total={true}
+                limit={true}
+              />
+              <CategoryList 
+                darkMode={darkMode} 
+                categories={categories} 
+                editCategory={editCategory} 
+                fetchCategories={fetch}
+              />
+            </div>
+          )
+        }
       </div>
     </div>
   );

@@ -77,7 +77,7 @@ export const Pagination: React.FC<PaginationProps>  = React.memo(({
     return (
       <div className="d-flex justify-content-center">
         <nav aria-label="Page navigation">
-          <ul className={cn("pagination", "pagination", {
+          <ul className={cn("pagination", "pagination-sm", {
               "color-white": darkMode,
             })}
           >

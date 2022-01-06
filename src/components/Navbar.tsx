@@ -48,14 +48,14 @@ const NavbarComp = () => {
             menuVariant={menuStyle}
           >
             <NavDropdown.Item href="">ВОРОНКА ПРОДАЖ</NavDropdown.Item>
-          </NavDropdown>
+          </NavDropdown> */}
           <NavDropdown 
             title={<span><FileEarmarkText /> Справочники</span>} 
-            id="data-nav-dropdown" 
+            id="directories-nav-dropdown" 
             menuVariant={menuStyle}
           >
-            <NavDropdown.Item href="">КЛИЕНТЫ</NavDropdown.Item>
-          </NavDropdown> */}
+            <NavDropdown.Item href="/clients" as={Link} to="/clients">Клиенты</NavDropdown.Item>
+          </NavDropdown>
           <NavDropdown 
             title={<span><Gear /> Настройки</span>} 
             id="preferences-nav-dropdown" 
