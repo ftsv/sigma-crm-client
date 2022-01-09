@@ -4,9 +4,7 @@ import { ToastsContext } from '../context/ToastsContext';
 import { Pagination } from '../components/Pagination';
 import cn from 'classnames';
 
-
-
-export const ProfilePage = () => {
+export const ProfilePage: React.FC = () => {
     const { darkMode } = useContext(ThemeContext);
     const { addToast } = useContext(ToastsContext);
     const [ pagination, setPagination ] = useState({page: 1, limit: 10, total: 0, pages: 10, skip: 0})
@@ -24,24 +22,35 @@ export const ProfilePage = () => {
 
     }, [pagination]);
 
-    return (
-    <div className={cn({'bg-dark': darkMode, 'text-white': darkMode,})}
-        style={{minHeight: "100vh", padding: "150px 0"}}>
-            <div className="container">
-                <input type="text" value={body} onChange={e => setBody(e.target.value)} onKeyPress={e => submit(e)}/>
-                <button className="btn btn-success" onClick={() => addToast("InfoToast", body, "info", 2000)}> добавить тостик</button>
+    React.useEffect(() => {
+        document.title = "Профиль";
+    }, []);
 
+    return (
+        <div className="container">
+            <input type="text" value={body} onChange={e => setBody(e.target.value)} onKeyPress={e => submit(e)}/>
+            <button className="btn btn-success" onClick={() => addToast("InfoToast", body, "info", 2000)}> добавить тостик</button>
+
+            <div>
+                <span>Пагинация </span>
+                <Pagination 
+                    pagination={pagination} 
+                    setPagination={setPagination} 
+                    darkMode={darkMode} 
+                />
+                <span>Пагинация окончена</span>
                 <div>
-                    <span>Пагинация </span>
-                    <Pagination pagination={pagination} setPagination={setPagination} />
-                    <span>Пагинация окончена</span>
-                    <div>
-                        <input type="number" name="page" value={pagination.page} min={1} max={pagination.pages} onChange={e => handlerPagination(e)} />
-                        <input type="number" name="pages" value={pagination.pages} min={1} onChange={e => handlerPagination(e)} />
-                    </div>
+                    <input 
+                        type="number" 
+                        name="page" 
+                        value={pagination.page} 
+                        min={1} max={pagination.pages} 
+                        onChange={e => handlerPagination(e)} 
+                        className="bg-dark text-white" 
+                    />
+                    <input type="number" name="pages" value={pagination.pages} min={1} onChange={e => handlerPagination(e)} />
                 </div>
             </div>
-        
-    </div>
+        </div>
     )
 }

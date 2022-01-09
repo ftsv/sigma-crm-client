@@ -1,10 +1,10 @@
-
+import { IRole } from './Role';
 
 export interface IUser {
-  id: number;
-  name: string;
+  id?: number | string;
+  name?: string;
   email: string;
-  password: string;
-  roles: any;
+  password?: string;
+  roles: IRole[];
   createdAt?: Date;
 }

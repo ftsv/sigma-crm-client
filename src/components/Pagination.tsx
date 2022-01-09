@@ -1,7 +1,5 @@
 import React from 'react';
-import { Button } from 'react-bootstrap';
 import cn from 'classnames';
-
 interface IPagination {
   page: number;
   limit: number;
@@ -9,27 +7,32 @@ interface IPagination {
   pages: number;
   skip: number;
 }
-
 interface PaginationProps {
   pagination: IPagination;
   setPagination: (pagination: IPagination) => {} | void;
   maxButtons?: number;
-  roundButtons?: boolean;
+  darkMode?: boolean;
+  contentLoading?: boolean;
+  total?: boolean;
+  limit?: boolean;
 }
 
 /* TODO Pagination:
 round buttons available
-limit per page
+limit per page make dynamic
 */
 
 export const Pagination: React.FC<PaginationProps>  = React.memo(({
   pagination ,
   setPagination, 
   maxButtons = 5,
+  darkMode = false,
+  contentLoading = true,
+  total = false,
+  limit = false,
 }) => {
 
   const { page, pages} = pagination;
-  // let maxButtons = 5;
   const buttonsArray: number[] = [];
   let finalArray: any[] = [];
 
@@ -72,104 +75,137 @@ export const Pagination: React.FC<PaginationProps>  = React.memo(({
     }
 
     return (
-      <div className="d-flex justify-content-center m-1">
-        {finalArray.map(btn => {
-          if (typeof btn === 'number') {
-            return (
-              <Button
-                key={btn}
-                type="button"
-                onClick={() => setPagination({...pagination, page: (btn) })}
-                className={cn("btn", "btn-sm", "btn-outline-*",
-                {
-                  // "btn-outline-warning": btn !== page,
-                  "btn-primary": btn === page,
+      <div className="d-flex justify-content-center">
+        <nav aria-label="Page navigation">
+          <ul className={cn("pagination", "pagination-sm", {
+              "color-white": darkMode,
+            })}
+          >
+            {finalArray.map(btn => {
+              if (typeof btn === 'number') {
+                if (btn !== page) {
+                  return (
+                    <li className="page-item" key={btn}>
+                      <span
+                        key={btn}
+                        onClick={() => setPagination({...pagination, page: (btn) })}
+                        className={cn("page-link", "text-reset", {
+                          "bg-dark": darkMode,
+                        })} 
+                        role="button"
+                        aria-disabled={contentLoading && "true"}
+
+                      >
+                        {btn}
+                      </span>
+                    </li>
+                  )     
                 }
+                return (
+                  <li className="page-item active" aria-current="page" key={btn}>
+                    <span
+                      key={btn}
+                      onClick={() => setPagination({...pagination, page: (btn) })}
+                      className="page-link"
+                    >
+                      {btn}
+                    </span>
+                    </li>
+                )
+              }
+
+              if (btn === '<') {
+                return (
+                  <li className="page-item" key={btn}>
+                    <a
+                      key={btn}
+                      onClick={() => setPagination({...pagination, page: page - 1})}
+                      className={cn("page-link", "text-reset", {
+                        "bg-dark": darkMode,
+                      })} 
+                      role="button"
+                    >
+                      {btn}
+                    </a>
+                  </li>
                 )}
-                style={{
-                  marginLeft: "5px",
-                  width: "3rem",
-                }}
-                disabled={(btn === page) ? true : false}
-              >
-                {btn}
-              </Button>
-            )}
 
-          if (btn === '...' && finalArray.indexOf(btn) > finalArray.length - maxButtons) {
-            console.log(finalArray.indexOf(btn) > finalArray.length - maxButtons);
-            return (
-              <Button
-                key={btn}
-                type="button"
-                // onClick={() => setPagination({...pagination, page: ((page + maxButtons) <= pages) ? (page + maxButtons) : pages})}
-                disabled={true}
-                className="btn btn-sm btn-outline-primary"
-                style={{
-                  marginLeft: '5px',
-                }}
-              >
-                {btn}
-              </Button>
-            )}
+              if (btn === '>') {
+                return (
+                  <li className="page-item" key={btn}>
+                    <a
+                      key={btn}
+                      onClick={() => setPagination({...pagination, page: page + 1})}
+                      className={cn("page-link", "text-reset", {
+                        "bg-dark": darkMode,
+                      })}
+                      role="button"
+                      aria-disabled={contentLoading && true}
+                    >
+                      {btn}
+                    </a>
+                  </li>
+                )}
 
-          if (btn === '<') {
-            return (
-              <Button
-                key={btn}
-                type="button"
-                onClick={() => setPagination({...pagination, page: page - 1})}
-                className="btn btn-sm"
-                style={{
-                  marginLeft: '5px',
-                  width: "2rem",
-                }}
-              >
-                {btn}
-              </Button>
-            )}
+              if (btn === '...' && finalArray.indexOf(btn) > finalArray.length - maxButtons) {
+                return (
+                  <li className="page-item" key={btn}>
+                    <span 
+                      key={btn} 
+                      className={cn("page-link", "text-reset", {
+                        "bg-dark": darkMode,
+                      })}
+                    > 
+                      {btn} 
+                    </span>
+                  </li>)
+              }
 
-          if (btn === '>') {
-            return (
-              <Button
-                key={btn}
-                type="button"
-                onClick={() => setPagination({...pagination, page: page + 1})}
-                className="btn btn-sm"
-                style={{
-                  marginLeft: '5px',
-                  width: "2rem",
-                  // borderRadius: roundButtons ? "100%" : "0px",
-                }}
-              >
-                {btn}
-              </Button>
-            )}
-
-          if (btn === '..') {
-            console.log(finalArray.indexOf(btn) < maxButtons);
-            return (
-              <Button
-                key={btn}
-                type="button"
-                // onClick={() => setPagination({...pagination, page: ((page - maxButtons) > 0) ? (page - maxButtons) : 1})}
-                disabled={true}
-                className="btn btn-sm btn-outline-primary"
-                style={{
-                  marginLeft: '5px',
-                }}
-              >
-                {btn}
-              </Button>
-            )}
-        }) || null}
+              if (btn === '..') {
+                return (
+                  <li className="page-item" key={btn}>
+                    <span 
+                      key={btn} 
+                      className={cn("page-link", "text-reset", {
+                        "bg-dark": darkMode,
+                      })}
+                    > 
+                      {btn} 
+                    </span>
+                  </li>)
+              }
+            }) || null}
+          </ul>
+        </nav>
       </div>
     )
   }
 
   return (
-    <div>
+    <div className="d-flex justify-content-between align-items-center m-1">
+      {total 
+        ? <span>Итого: <span>{pagination.total}</span></span> 
+        : <span></span>
+      }
       <span>{paginationArray()}</span>
+      {limit 
+        ? <span>
+            <select
+              name="limit"
+              className={cn({
+                "bg-dark text-white": darkMode,
+              })}
+              value={pagination.limit}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setPagination({...pagination, limit: parseInt(e.target.value) })}
+            >
+              <option value={5}>5</option>
+              <option value={10}>10</option>
+              <option value={25}>25</option>
+              <option value={50}>50</option>
+            </select>
+          </span>
+        : <span></span>
+      }
     </div>
   );
 });

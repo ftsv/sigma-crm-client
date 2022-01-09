@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
 import { 
   Gear, 
@@ -13,20 +13,18 @@ import {
   BoxArrowRight 
 } from 'react-bootstrap-icons';
 import { AuthContext } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import { ThemeContext } from '../context/ThemeContext';
-import './Navbar.css';
+
 
 const NavbarComp = () => {
   const auth = useContext(AuthContext);
   const { darkMode, toggleDarkMode } = useContext(ThemeContext)
-  // const auth = useAuth();
   const navigate = useNavigate();
   const menuStyle = darkMode ? 'dark' : 'light';
 
   const handleLogout = () => {
     auth.logout();
-    navigate('/auth');
+    navigate('/auth', {replace: true});
   }
 
   return (
@@ -36,25 +34,25 @@ const NavbarComp = () => {
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="me-auto my-2 my-lg-0">
-          <Nav.Link href="">
+          {/* <Nav.Link href="">
             {<span><Calendar3 /> ПЛАНИРОВЩИК</span>}
+          </Nav.Link> */}
+          <Nav.Link  href="/cases" as={Link} to="/cases" className="nav-link">
+              {<span><ListTask /> Дела</span>}
           </Nav.Link>
-          <Nav.Link  href="/todos" as={Link} to="/todos" className="nav-link">
-              {<span><ListTask /> Задачи</span>}
-          </Nav.Link>
-          <NavDropdown 
+          {/* <NavDropdown 
             title={<span><GraphUpArrow /> Отчеты</span>} 
             id="reports-nav-dropdown" 
             menuVariant={menuStyle}
           >
             <NavDropdown.Item href="">ВОРОНКА ПРОДАЖ</NavDropdown.Item>
-          </NavDropdown>
+          </NavDropdown> */}
           <NavDropdown 
             title={<span><FileEarmarkText /> Справочники</span>} 
-            id="data-nav-dropdown" 
+            id="directories-nav-dropdown" 
             menuVariant={menuStyle}
           >
-            <NavDropdown.Item href="">КЛИЕНТЫ</NavDropdown.Item>
+            <NavDropdown.Item href="/clients" as={Link} to="/clients">Клиенты</NavDropdown.Item>
           </NavDropdown>
           <NavDropdown 
             title={<span><Gear /> Настройки</span>} 
@@ -62,9 +60,9 @@ const NavbarComp = () => {
             menuVariant={menuStyle}
           >
             <NavDropdown.Item href="/users" as={Link} to="/users">Пользователи</NavDropdown.Item>
-            <NavDropdown.Item href="">РОЛИ</NavDropdown.Item>
+            {/* <NavDropdown.Item href="">РОЛИ</NavDropdown.Item> */}
             <NavDropdown.Item href="/category" as={Link} to="/category">Категории</NavDropdown.Item>
-            <NavDropdown.Item href="">ШАБЛОНЫ</NavDropdown.Item>
+            {/* <NavDropdown.Item href="">ШАБЛОНЫ</NavDropdown.Item> */}
           </NavDropdown>
         </Nav>
         <button 

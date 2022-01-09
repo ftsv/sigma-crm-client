@@ -41,8 +41,9 @@ export const AuthPage = () => {
     
   }
 
-  
-
+    React.useEffect(() => {
+        document.title = "Авторизация";
+    }, []);
   return (
     <div className="container d-flex align-middle justify-content-center" style={{height: "100vh"}}>
       <div className="col-6 ">

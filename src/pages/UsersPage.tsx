@@ -1,13 +1,15 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+// import cn from 'classnames';
 import { AuthContext } from '../context/AuthContext';
 import { ThemeContext } from '../context/ThemeContext';
 import { ToastsContext } from '../context/ToastsContext';
+import queryStringCreator from '../services/query-string-creator';
 import { useHttp } from '../hooks/useHttp';
 import { Spinner } from 'react-bootstrap';
 import { IUser } from '../types/User';
 import UserList from '../components/UserList';
-import cn from 'classnames';
+import { ModalUser } from '../components/Modals/ModalUser';
 import { Pagination } from '../components/Pagination';
 
 export const UsersPage = () => {
@@ -17,103 +19,86 @@ export const UsersPage = () => {
     const location = useLocation();
     // const navigate = useNavigate();
     const { request, error, loading } = useHttp();
-    const [users, setUsers] = useState<IUser[]>([]);
-    const [pagination, setPagination] = useState({page: 1, limit: 10, total: 0, pages: 0, skip: 0}); // возможно необходимо сделать контекст фильтра в localStorage для первичного отображения
-
-
+    const [users, setUsers] = React.useState<IUser[]>([]);
+    const [pagination, setPagination] = React.useState({page: 1, limit: 10, total: 0, pages: 0, skip: 0}); // возможно необходимо сделать контекст фильтра в localStorage для первичного отображения
 
     //=======вариант автоматической пагинации (блок в конце и observer)
+
     //=======вариант с ручным переключением
 
+    // const queryHandler = (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
+    //     setPagination({...pagination, [e.target.name]: parseInt(e.target.value) });
+    // };
+    const fetch = async () => {
+        try {
+            const {pagination, users} = await request(`/api/user/all${location.search}`,'GET', null, {
+                Authorization: `Bearer ${auth.token}` 
+            });
+            setPagination(pagination);
+            setUsers(users);
+        } catch (e: any) {}
+    }
 
-    const queryHandler = (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
-        setPagination({...pagination, [e.target.name]: parseInt(e.target.value) });
-    };
+    const addItem = React.useCallback(async (item) => {
+        try {
+            const data = await request('/api/auth/register', 'POST', {...item});
+            addToast('Выполнено', `${data.message}`, 'success', 7000);
+            fetch();
+        } catch (e: any) {}
+    },[])
+
+    //либо сделать модальным, но лучше вынести на отдельную страницу Карточки пользователя
+    const editItem = React.useCallback(async (item) => {
+        try {
+            await request(`/api/user/${item._id}`, 'PUT', {...item},{
+                Authorization: `Bearer ${auth.token}` 
+            });
+            addToast("Выполнено", `Категория ${item.title.toLowerCase()} изменена!`, "success", 7000);
+            fetch();
+        } catch (e: any) {}
+        
+    },[])
 
     useEffect(() => {
         error !== null && addToast('Ошибка', `${error}`, 'danger',7000);
     }, [error, addToast]);
 
     useEffect(() => {
-        // make hook for queryString
-        const queryStringCreator = (queryObject: any) => {
-            let queryParams = "?";
-            for (let key in queryObject) {
-                if (key === Object.keys(queryObject)[0]) {
-                    queryParams += (`${key}=${queryObject[key]}`);
-                } else if (typeof queryObject[key] === 'number' || typeof queryObject[key] === 'string' ) {
-                    queryParams += (`&${key}=${queryObject[key]}`);
-                }
-            }
-
-            return queryParams;
-        }
-
-        const fetchUsers = async () => {
-            try {
-                const {pagination, users} = await request(`/api/user/pagination${location.search}`,'GET', null, {
-                    Authorization: `Bearer ${auth.token}` 
-                });
-                setPagination(pagination);
-                setUsers(users);
-            } catch (e: any) {
-                addToast('Ошибка', `${e}`, 'danger', 7000);
-            }
-        }
-        let queryString = queryStringCreator(pagination);
-        location.search = queryString;
-        fetchUsers();
+        location.search = queryStringCreator(pagination);
+        fetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pagination.page, pagination.limit]);
 
+    React.useEffect(() => {
+        document.title = "Пользователи";
+    }, []);
+
     return (
-        <div
-            className={cn({
-                'bg-dark': darkMode,
-                'text-white': darkMode,
-            })}
-            style={{minHeight: "100vh", padding: "80px 0"}}
-        >
-            <div className="container" style={{marginTop: "30px"}}>
-                <div className="d-flex justify-content-between align-items-center">
-                    <div>
-                        <span>{`общее количество: ${pagination.total} `}</span>
-                        <span>страница № </span>
-                        <input
-                            type="number"
-                            name="page"
-                            value={pagination.page}
-                            min={1}
-                            max={pagination.pages}
-                            onChange={(e) => queryHandler(e)}
-                        />
-                        <span>{`/ ${pagination.pages} `}</span>
-                        <span style={{margin: "0 10px"}}>кол-во на стр:</span>
-                        <select
-                            name="limit"
-                            value={pagination.limit}
-                            onChange={(e) => queryHandler(e)}
-                        >
-                            <option value={5}>5</option>
-                            <option value={10}>10</option>
-                            <option value={25}>25</option>
-                            <option value={50}>50</option>
-                        </select>
-                    </div>
-                </div>
-                <div>
-                    <Pagination pagination={pagination} setPagination={setPagination} />
-                </div>
-                {loading 
-                    ? (<div className="container justify-content-center" style={{marginTop: "20px"}}>
-                        <Spinner animation="border" variant="secondary" />
-                    </div>)
-                    : (users && users.length) && <UserList users={users} skip={pagination.skip} /> }
-                </div>
-                <div>
-                    <Pagination pagination={pagination} setPagination={setPagination} />
-                </div>
+        <div className="container" style={{marginTop: "30px"}}>
+            <div>
+                <ModalUser darkMode={darkMode} addItem={addItem} />
+            </div>
+            {loading 
+                ? (<div className="container justify-content-center mt-3">
+                    <Spinner animation="border" variant="secondary" />
+                </div>)
+                : (<div>
+                    <Pagination 
+                        pagination={pagination} 
+                        setPagination={setPagination} 
+                        darkMode={darkMode} 
+                        contentLoading={loading}
+                        total={true}
+                        limit={true}
+                    />
+                    {(users && users.length) && <UserList users={users} skip={pagination.skip} />}
+                    <Pagination 
+                        pagination={pagination} 
+                        setPagination={setPagination} 
+                        darkMode={darkMode} 
+                    />
+                </div>)
+            }
         </div>
-    
     )
 }

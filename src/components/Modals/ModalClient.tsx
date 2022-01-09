@@ -1,57 +1,68 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
-import { ICategory } from '../types/Category';
+import { IClient } from '../../types/Client'; // make changeable
 
-interface ModalCategoryProps {
+interface ModalProps {
   darkMode: boolean;
-  currentCategory?: ICategory;
-  setCurrentCategory?: (category: ICategory) => {} | void ;
+  currentItem?: IClient;
+  setCurrentItem?: (item: IClient) => {} | void ;
   isShow?: boolean;
   setIsShow?: any;
-  addCategory?: any;
-  editCategory?: any;
+  addItem?: any;
+  editItem?: any;
   btn?: boolean;
 }
 
-export const ModalCategory: React.FC<ModalCategoryProps> = ({darkMode, isShow, setIsShow, currentCategory, setCurrentCategory, addCategory, editCategory , btn = true}, ) => {
+export const ModalClient: React.FC<ModalProps> = ({
+  darkMode, 
+  isShow, 
+  setIsShow, 
+  currentItem, 
+  setCurrentItem, 
+  addItem, 
+  editItem , 
+  btn = true,
+}) => {
   const [show, setShow] = useState(isShow);
-  const clearCategory = {
-    title: "",
-    description: "",
-    priority: 1,
-    createDate: ""
-  }
-  const [category, setCategory] = useState<ICategory>(clearCategory)
+  const clearItem = {
+        _id: '',
+        lastName: '',
+        firstName: '',
+        middleName: '',
+        contacts: {},
+        manager: '',
+    }
+  const [item, setItem] = useState<IClient>(clearItem);
 
   const handleForm = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCategory({...category, [e.target.name]: e.target.value})
+    setItem({...item, [e.target.name]: e.target.value})
   }
 
   const handleSubmit = () => {
-    addCategory(category);
+    addItem(item);
     setShow(false);
     setIsShow && setIsShow(false);
-    setCategory(clearCategory);
-    setCurrentCategory && setCurrentCategory(clearCategory);
+    setItem(clearItem);
+    setCurrentItem && setCurrentItem(clearItem);
   }
 
 
   const handleClose = () => {
     setShow(false);
     setIsShow && setIsShow(false);
-    setCategory(clearCategory);
-    setCurrentCategory && setCurrentCategory(clearCategory);
+    setItem(clearItem);
+    setCurrentItem && setCurrentItem(clearItem);
   }
 
-  const handleClear = () => setCategory(clearCategory);
+  const handleClear = () => setItem(clearItem);
   
 
   const handleShow = () => setShow(true);
 
   useEffect(() => {
     setShow(isShow);
-    currentCategory && setCategory(currentCategory)
-  }, [isShow, currentCategory])
+    currentItem && setItem(currentItem)
+  }, [isShow, currentItem])
 
   return (
     <>
@@ -79,7 +90,7 @@ export const ModalCategory: React.FC<ModalCategoryProps> = ({darkMode, isShow, s
               id="categoryTitle" 
               aria-describedby="titleHelp"
               name="title"
-              value={category.title}
+              value={item.lastName}
               onChange={(e) => handleForm(e)}
             />
           </div>
@@ -91,12 +102,12 @@ export const ModalCategory: React.FC<ModalCategoryProps> = ({darkMode, isShow, s
               id="categoryDescription" 
               aria-describedby="descriptionHelp"
               name="description"
-              value={category.description}
+              value={item.firstName}
               onChange={(e) => handleForm(e)}
             />
             <div id="descriptionHelp" className="form-text">Не более 40 символов</div>
           </div>
-          <div className="mb-3">
+          {/* <div className="mb-3">
             <label htmlFor="categoryPriority" className="form-label">Приоритет категории<span className="text-danger"><strong> *</strong></span></label>
             <input 
               type="number" 
@@ -104,11 +115,11 @@ export const ModalCategory: React.FC<ModalCategoryProps> = ({darkMode, isShow, s
               id="categoryPriority" 
               aria-describedby="priorityHelp"
               name="priority"
-              value={category.priority}
+              value={item.priority}
               onChange={(e) => handleForm(e)}
             />
-            <div id="priorityHelp" className="form-text">Первые в списке дела с высшим приоритетом</div>
-          </div>
+            <div id="priorityHelp" className="form-text">Первые в списке категории с высшим приоритетом</div>
+          </div> */}
 
         </Modal.Body>
         <Modal.Footer>
@@ -119,7 +130,7 @@ export const ModalCategory: React.FC<ModalCategoryProps> = ({darkMode, isShow, s
             Отменить
           </Button>
           {isShow 
-          ? (<Button variant="primary" onClick={() =>  editCategory(category) } size="sm">
+          ? (<Button variant="primary" onClick={() =>  editItem(item) } size="sm">
               Изменить
             </Button>)
           : (<Button variant="primary" onClick={ handleSubmit } size="sm">
