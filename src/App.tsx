@@ -8,29 +8,28 @@ import ToastsProvider, { ToastsContext } from './context/ToastsContext';
 import { Routing } from './router';
 
 
-const App: React.FC = (): JSX.Element => {
-  const { token } = useContext(AuthContext);
-  const isAuth = !!token;
-  // const routes = useRouting(isAuth);
-  
-  return (
+const App: React.FC = (): JSX.Element => (
     <>
-      <ThemeProvider>
-          <ToastsProvider>
-              <BrowserRouter>
-                {isAuth && <NavbarComp />}
-                <Routing />
-              </BrowserRouter>
-              <ToastsContext.Consumer>
-                {value => <ToastMessage 
-                  toastList={value.toasts}
-                  position="bottom-end" // добавить контекст, для возможности выбора настроек пользователем
-                />}
-              </ToastsContext.Consumer>
-          </ToastsProvider>
-      </ThemeProvider>
+      <AuthContext.Consumer>
+        {value => (
+          <ThemeProvider>
+            <ToastsProvider>
+                <BrowserRouter>
+                  {/* {isAuth && <NavbarComp />} */}
+                  <Routing auth={!!value.token} />
+                </BrowserRouter>
+                <ToastsContext.Consumer>
+                  {value => <ToastMessage 
+                    toastList={value.toasts}
+                    position="bottom-end" // добавить контекст, для возможности выбора настроек пользователем
+                  />}
+                </ToastsContext.Consumer>
+            </ToastsProvider>
+          </ThemeProvider>
+        )}
+      </AuthContext.Consumer>
+      
     </>
     )
-}
 
 export default App;

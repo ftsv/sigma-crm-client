@@ -72,7 +72,7 @@ export const CategoryPage = () => {
       <ModalCategory darkMode={darkMode} addCategory={addItem} />
       <div>
         {loading 
-          ? (<div className="container justify-content-center" style={{marginTop: "20px"}}>
+          ? (<div className="container justify-content-center mt-3">
               <Spinner animation="border" variant="secondary" />
             </div>
           )

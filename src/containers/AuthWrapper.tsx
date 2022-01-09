@@ -2,11 +2,13 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import cn from 'classnames';
 import { ThemeContext } from '../context/ThemeContext';
+import NavbarComp from '../components/Navbar';
 
-export const SimpleWrapper: React.FC = (): JSX.Element => {
+export const AuthWrapper: React.FC = (): JSX.Element => {
     const { darkMode } = React.useContext(ThemeContext);
     return (
         <>
+            <NavbarComp />
             <div
                 className={cn({
                     'bg-dark': darkMode,
@@ -19,5 +21,6 @@ export const SimpleWrapper: React.FC = (): JSX.Element => {
                 </div>
             </div>
         </>
+        
     );
 };

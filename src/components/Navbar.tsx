@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
 import { 
   Gear, 
@@ -13,20 +13,18 @@ import {
   BoxArrowRight 
 } from 'react-bootstrap-icons';
 import { AuthContext } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import { ThemeContext } from '../context/ThemeContext';
 
 
 const NavbarComp = () => {
   const auth = useContext(AuthContext);
   const { darkMode, toggleDarkMode } = useContext(ThemeContext)
-  // const auth = useAuth();
   const navigate = useNavigate();
   const menuStyle = darkMode ? 'dark' : 'light';
 
   const handleLogout = () => {
     auth.logout();
-    navigate('/auth');
+    navigate('/auth', {replace: true});
   }
 
   return (

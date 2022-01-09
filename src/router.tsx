@@ -7,27 +7,29 @@ import { CategoryPage } from "./pages/CategoryPage";
 import { Todos } from "./pages/Todos";
 import React from 'react';
 import { SimpleWrapper } from "./containers/SimpleWrapper";
-import { useAuth } from "./hooks/useAuth";
 import { CasePage } from "./pages/CasePage";
 import { CasesPage } from "./pages/CasesPage";
+import { AuthWrapper } from "./containers/AuthWrapper";
 
-export const Routing: React.FC = (): JSX.Element => {
-  const { token } = useAuth();
-  const isAuth = !!token;
+interface RoutingProps {
+  auth: boolean;
+}
 
+export const Routing: React.FC<RoutingProps> = ({auth}): JSX.Element => {
   let authLayout = {
       path: '/',
       element: <SimpleWrapper />,
       children: [
         {path: "/auth", element: <AuthPage />},
+        {path: '/', element: <Navigate to="/auth" />},
         {path: '*', element: <Navigate to="/auth" />},
       ]
     }
 
-  if (isAuth) {
+  if (auth) {
     authLayout = {
       path: '/',
-      element: <SimpleWrapper />,
+      element: <AuthWrapper />,
       children: [
         {path: '/todos', element: <Todos />},
         {path: '/profile', element: <ProfilePage />},
@@ -36,6 +38,8 @@ export const Routing: React.FC = (): JSX.Element => {
         {path: '/clients', element: <ClientsPage />},
         {path: '/cases', element: <CasesPage />},
         {path: '/case/:id', element: <CasePage />},
+        {path: '/auth', element: <Navigate to="/profile" />},
+        {path: '/', element: <Navigate to="/profile" />},
         {path: '*', element: <Navigate to="/profile" />},
       ]
     }
@@ -47,12 +51,4 @@ export const Routing: React.FC = (): JSX.Element => {
     {router}
     </>
   )
-
-  // return (
-  //   <>
-  //     <Routes>
-  //       {/* <Route path="/auth" element={<AuthPage />} ?
-  //     </Routes>
-  //   </>
-  // );
 };
