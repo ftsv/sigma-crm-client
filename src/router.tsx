@@ -8,6 +8,8 @@ import { Todos } from "./pages/Todos";
 import React from 'react';
 import { SimpleWrapper } from "./containers/SimpleWrapper";
 import { useAuth } from "./hooks/useAuth";
+import { CasePage } from "./pages/CasePage";
+import { CasesPage } from "./pages/CasesPage";
 
 export const Routing: React.FC = (): JSX.Element => {
   const { token } = useAuth();
@@ -32,6 +34,8 @@ export const Routing: React.FC = (): JSX.Element => {
         {path: '/users', element: <UsersPage />},
         {path: '/category', element: <CategoryPage />},
         {path: '/clients', element: <ClientsPage />},
+        {path: '/cases', element: <CasesPage />},
+        {path: '/case/:id', element: <CasePage />},
         {path: '*', element: <Navigate to="/profile" />},
       ]
     }

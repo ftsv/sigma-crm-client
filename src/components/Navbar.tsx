@@ -39,8 +39,8 @@ const NavbarComp = () => {
           {/* <Nav.Link href="">
             {<span><Calendar3 /> ПЛАНИРОВЩИК</span>}
           </Nav.Link> */}
-          <Nav.Link  href="/todos" as={Link} to="/todos" className="nav-link">
-              {<span><ListTask /> Задачи</span>}
+          <Nav.Link  href="/cases" as={Link} to="/cases" className="nav-link">
+              {<span><ListTask /> Дела</span>}
           </Nav.Link>
           {/* <NavDropdown 
             title={<span><GraphUpArrow /> Отчеты</span>} 

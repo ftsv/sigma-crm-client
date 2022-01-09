@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useState } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useHttp } from '../hooks/useHttp';
 import { ICategory } from '../types/Category';
-import { ModalCategory } from './ModalCategory';
+import { ModalCategory } from './Modals/ModalCategory';
 import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { PencilFill, TrashFill } from 'react-bootstrap-icons';
 import cn from 'classnames';
@@ -27,13 +27,13 @@ export const CategoryList: React.FC<CategoryListProps> = ({darkMode, categories,
     priority: 1,
   });
 
-  const deleteCategory = useCallback(async (category: ICategory) => {
+  const deleteItem = useCallback(async (item: ICategory) => {
     try {
-      await request(`/api/category/${category._id}`, 'DELETE', null, {
+      await request(`/api/category/${item._id}`, 'DELETE', null, {
         Authorization: `Bearer ${auth.token}` 
       })
       fetchCategories();
-      addToast("Внимание!", `Категория ${category.title} удалена!`, "warning", 3000)
+      addToast("Внимание!", `Категория ${item.title} удалена!`, "warning", 3000)
     } catch (e) {
         addToast("Ошибка", ``, "danger", 5000);
         console.log(e);
@@ -100,7 +100,7 @@ export const CategoryList: React.FC<CategoryListProps> = ({darkMode, categories,
                     <Button variant={darkMode ? "danger" : "outline-danger"}
                       disabled={category.isBlocked}
                       size="sm"
-                      onClick={() => deleteCategory(category)}
+                      onClick={() => deleteItem(category)}
                       style={{marginLeft: "10px"}}
                     >
                       <TrashFill />

@@ -46,6 +46,7 @@ export const Todos: React.FC = () => {
 
   useEffect(() => {
     inputRef.current && inputRef.current.focus();
+    document.title = 'Задачи';
   }, [])
 
   return (

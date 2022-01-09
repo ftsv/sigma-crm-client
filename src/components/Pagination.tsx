@@ -19,7 +19,7 @@ interface PaginationProps {
 
 /* TODO Pagination:
 round buttons available
-limit per page
+limit per page make dynamic
 */
 
 export const Pagination: React.FC<PaginationProps>  = React.memo(({
@@ -85,7 +85,7 @@ export const Pagination: React.FC<PaginationProps>  = React.memo(({
               if (typeof btn === 'number') {
                 if (btn !== page) {
                   return (
-                    <li className="page-item">
+                    <li className="page-item" key={btn}>
                       <span
                         key={btn}
                         onClick={() => setPagination({...pagination, page: (btn) })}
@@ -102,7 +102,7 @@ export const Pagination: React.FC<PaginationProps>  = React.memo(({
                   )     
                 }
                 return (
-                  <li className="page-item active" aria-current="page">
+                  <li className="page-item active" aria-current="page" key={btn}>
                     <span
                       key={btn}
                       onClick={() => setPagination({...pagination, page: (btn) })}
@@ -116,7 +116,7 @@ export const Pagination: React.FC<PaginationProps>  = React.memo(({
 
               if (btn === '<') {
                 return (
-                  <li className="page-item">
+                  <li className="page-item" key={btn}>
                     <a
                       key={btn}
                       onClick={() => setPagination({...pagination, page: page - 1})}
@@ -132,7 +132,7 @@ export const Pagination: React.FC<PaginationProps>  = React.memo(({
 
               if (btn === '>') {
                 return (
-                  <li className="page-item">
+                  <li className="page-item" key={btn}>
                     <a
                       key={btn}
                       onClick={() => setPagination({...pagination, page: page + 1})}
@@ -149,7 +149,7 @@ export const Pagination: React.FC<PaginationProps>  = React.memo(({
 
               if (btn === '...' && finalArray.indexOf(btn) > finalArray.length - maxButtons) {
                 return (
-                  <li className="page-item">
+                  <li className="page-item" key={btn}>
                     <span 
                       key={btn} 
                       className={cn("page-link", "text-reset", {
@@ -163,7 +163,7 @@ export const Pagination: React.FC<PaginationProps>  = React.memo(({
 
               if (btn === '..') {
                 return (
-                  <li className="page-item">
+                  <li className="page-item" key={btn}>
                     <span 
                       key={btn} 
                       className={cn("page-link", "text-reset", {

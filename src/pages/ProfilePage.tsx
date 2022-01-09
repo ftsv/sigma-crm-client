@@ -4,8 +4,6 @@ import { ToastsContext } from '../context/ToastsContext';
 import { Pagination } from '../components/Pagination';
 import cn from 'classnames';
 
-
-
 export const ProfilePage: React.FC = () => {
     const { darkMode } = useContext(ThemeContext);
     const { addToast } = useContext(ToastsContext);
@@ -23,6 +21,10 @@ export const ProfilePage: React.FC = () => {
         setPagination({...pagination, [e.target.name]: e.target.name !== "current" ? parseInt(e.target.value) : parseInt(e.target.value) - 1 });
 
     }, [pagination]);
+
+    React.useEffect(() => {
+        document.title = "Профиль";
+    }, []);
 
     return (
         <div className="container">

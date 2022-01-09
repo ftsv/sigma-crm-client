@@ -6,7 +6,7 @@ import cn from 'classnames';
 import { AuthContext } from '../context/AuthContext';
 import { ThemeContext } from '../context/ThemeContext';
 import { ToastsContext } from '../context/ToastsContext';
-import { ModalCategory } from '../components/ModalCategory';
+import { ModalCategory } from '../components/Modals/ModalCategory';
 import { useHttp } from '../hooks/useHttp';
 import { ICategory } from '../types/Category';
 import { CategoryList } from '../components/CategoryList';
@@ -23,41 +23,33 @@ export const CategoryPage = () => {
   const [pagination, setPagination] = useState({page: 1, limit: 10, total: 0, pages: 0, skip: 0}); // возможно необходимо сделать контекст фильтра в localStorage для первичного отображения
 
   const fetch = async () => {
-          try {
-              const {pagination, categories} = await request(`/api/category/all${location.search}`,'GET', null, {
-                  Authorization: `Bearer ${auth.token}` 
-              });
-              setPagination(pagination);
-              setCategories(categories);
-          } catch (e: any) {
-              addToast('Ошибка', `${e}`, 'danger', 7000);
-          }
-      }
-
-  const addCategory = React.useCallback(async (category) => {
     try {
-      await request('/api/category/add', 'POST', {...category},{
+        const {pagination, categories} = await request(`/api/category/all${location.search}`,'GET', null, {
+            Authorization: `Bearer ${auth.token}` 
+        });
+        setPagination(pagination);
+        setCategories(categories);
+    } catch (e: any) {}
+  }
+
+  const addItem = React.useCallback(async (item) => {
+    try {
+      await request('/api/category/add', 'POST', {...item},{
                 Authorization: `Bearer ${auth.token}` 
             })
-      addToast("Выполнено", `Категория ${category.title} создана!`, "success", 7000)
-    } catch (e: any) {
-        addToast("Ошибка", `${e}`, "danger", 7000);
-        console.log(e);
-    }
+      addToast("Выполнено", `Категория ${item.title.toLowerCase()} создана!`, "success", 7000)
+    } catch (e: any) {}
 
     fetch();
   },[])
 
-  const editCategory = React.useCallback(async (category: ICategory) => {
+  const editItem = React.useCallback(async (item: ICategory) => {
     try {
-      await request(`/api/category/${category._id}`, 'PUT', {...category},{
+      await request(`/api/category/${item._id}`, 'PUT', {...item},{
           Authorization: `Bearer ${auth.token}` 
       });
-      addToast("Выполнено", `Категория ${category.title} изменена!`, "success", 7000)
-    } catch (e: any) {
-      addToast("Ошибка", `${e}`, "danger", 7000);
-        console.log(e);
-    }
+      addToast("Выполнено", `Категория ${item.title.toLowerCase()} изменена!`, "success", 7000)
+    } catch (e: any) {}
     
     fetch();
   },[])
@@ -72,9 +64,12 @@ export const CategoryPage = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination?.page, pagination?.limit]);
 
+  React.useEffect(() => {
+    document.title = "Категории";
+  }, []);
   return (
     <div className="container">
-      <ModalCategory darkMode={darkMode} addCategory={addCategory} />
+      <ModalCategory darkMode={darkMode} addCategory={addItem} />
       <div>
         {loading 
           ? (<div className="container justify-content-center" style={{marginTop: "20px"}}>
@@ -92,7 +87,7 @@ export const CategoryPage = () => {
               <CategoryList 
                 darkMode={darkMode} 
                 categories={categories} 
-                editCategory={editCategory} 
+                editCategory={editItem} 
                 fetchCategories={fetch}
               />
             </div>

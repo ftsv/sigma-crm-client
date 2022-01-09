@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
-import { ICategory } from '../types/Category';
+import { ICategory } from '../../types/Category';
 
 interface ModalCategoryProps {
   darkMode: boolean;
@@ -66,7 +66,11 @@ export const ModalCategory: React.FC<ModalCategoryProps> = ({darkMode, isShow, s
       }
       
 
-      <Modal show={show} onHide={handleClose}>
+      <Modal 
+        show={show} 
+        onHide={handleClose}
+        className="was-validated"
+      >
         <Modal.Header closeButton>
           <Modal.Title>Добавление категории</Modal.Title>
         </Modal.Header>
@@ -81,6 +85,7 @@ export const ModalCategory: React.FC<ModalCategoryProps> = ({darkMode, isShow, s
               name="title"
               value={category.title}
               onChange={(e) => handleForm(e)}
+              required
             />
           </div>
           <div className="mb-3">
@@ -106,8 +111,9 @@ export const ModalCategory: React.FC<ModalCategoryProps> = ({darkMode, isShow, s
               name="priority"
               value={category.priority}
               onChange={(e) => handleForm(e)}
+              required
             />
-            <div id="priorityHelp" className="form-text">Первые в списке дела с высшим приоритетом</div>
+            <div id="priorityHelp" className="form-text">Первые в списке категории с высшим приоритетом</div>
           </div>
 
         </Modal.Body>
