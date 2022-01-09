@@ -2,13 +2,13 @@ import React from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { ThemeContext } from '../context/ThemeContext';
 import { ToastsContext } from '../context/ToastsContext';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useHttp } from '../hooks/useHttp';
 // import { Spinner } from 'react-bootstrap';
 import { Pagination } from '../components/Pagination';
 
 export const CasesPage: React.FC = (): JSX.Element => {
-    const auth = React.useContext( AuthContext );
+    // const auth = React.useContext( AuthContext );
     const { darkMode } = React.useContext(ThemeContext);
     const { addToast } = React.useContext(ToastsContext);
     const { request, error, loading } = useHttp();
@@ -18,7 +18,10 @@ export const CasesPage: React.FC = (): JSX.Element => {
         {id: '220109-1', client: 'Sidorov O.N.', category: ''},
     ]);
     const [pagination, setPagination] = React.useState({page: 1, limit: 10, total: 0, pages: 0, skip: 0}); // возможно необходимо сделать контекст фильтра в localStorage для первичного отображения
-    const location = useLocation();
+
+    React.useEffect(() => {
+        error !== null && addToast('Ошибка', `${error}`, 'danger',7000);
+    }, [error, addToast]);
 
     React.useEffect(() => {
         document.title = "Дела";

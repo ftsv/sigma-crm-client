@@ -1,6 +1,5 @@
-import React, { useContext} from 'react';
+import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import NavbarComp from './components/Navbar';
 import ToastMessage from './components/ToastMessage/ToastMessage';
 import { AuthContext } from './context/AuthContext';
 import ThemeProvider from './context/ThemeContext';
