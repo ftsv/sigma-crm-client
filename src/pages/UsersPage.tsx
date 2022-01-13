@@ -11,6 +11,7 @@ import { IUser } from '../types/User';
 import UserList from '../components/UserList';
 import { ModalUser } from '../components/Modals/ModalUser';
 import { Pagination } from '../components/Pagination';
+import { tokenChecker } from '../services/token-checker';
 
 export const UsersPage = () => {
     const auth = useContext( AuthContext );
@@ -31,9 +32,7 @@ export const UsersPage = () => {
     // };
     const fetch = async () => {
         try {
-            const {pagination, users} = await request(`/api/user/all${location.search}`,'GET', null, {
-                Authorization: `Bearer ${auth.token}` 
-            });
+            const {pagination, users} = await request(`/api/user/all${location.search}`,'GET', null, tokenChecker());
             setPagination(pagination);
             setUsers(users);
         } catch (e: any) {}
@@ -50,10 +49,8 @@ export const UsersPage = () => {
     //либо сделать модальным, но лучше вынести на отдельную страницу Карточки пользователя
     const editItem = React.useCallback(async (item) => {
         try {
-            await request(`/api/user/${item._id}`, 'PUT', {...item},{
-                Authorization: `Bearer ${auth.token}` 
-            });
-            addToast("Выполнено", `Категория ${item.title.toLowerCase()} изменена!`, "success", 7000);
+            await request(`/api/user/${item._id}`, 'PUT', {...item}, tokenChecker());
+            addToast("Выполнено", `Пользователь ${item.title.toLowerCase()} изменен!`, "success", 7000);
             fetch();
         } catch (e: any) {}
         

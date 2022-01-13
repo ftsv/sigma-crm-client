@@ -36,8 +36,6 @@ export const CategoryList: React.FC<CategoryListProps> = ({darkMode, categories,
       addToast("Внимание!", `Категория ${item.title} удалена!`, "warning", 3000)
     } catch (e) {
         addToast("Ошибка", ``, "danger", 5000);
-        console.log(e);
-        
     }
     
 

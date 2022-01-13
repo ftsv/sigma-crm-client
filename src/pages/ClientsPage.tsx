@@ -4,18 +4,14 @@ import { ThemeContext } from '../context/ThemeContext';
 import { Table } from '../containers/Table';
 import { Pagination } from '../components/Pagination';
 import { ClientsRowProps } from '../types/Tables/ClientsRowProps';
+import { dataClients } from '../dbsEmule/clientsDB';
 
 
 
 export const ClientsPage: React.FC = (): JSX.Element => {
     const {darkMode} = React.useContext(ThemeContext);
     const [pagination, setPagination] = React.useState({page: 1, limit: 10, total: 0, pages: 0, skip: 0}); // возможно необходимо сделать контекст фильтра в localStorage для первичного отображения
-    const [clients, setClients] = React.useState<ClientsRowProps[]>([{
-        fullName: 'Ivanov Ivan Ivanovish',
-        contacts: 'т. +79990001234',
-        cases: ['fisdafidisfidas', 'dsaj3n4jk324bj34bj34'],
-        manager: 'q@q.ru',
-    }]);
+    const [clients, setClients] = React.useState<ClientsRowProps[]>([]);
     const tableHeader = [{
         name: 'counter',
         header: '#',
@@ -26,8 +22,8 @@ export const ClientsPage: React.FC = (): JSX.Element => {
         name: 'contacts',
         header: 'Контакты',
     }, {
-        name: 'cases',
-        header: 'Дела'
+        name: 'documents',
+        header: 'Документы'
     }, {
         name: 'manager',
         header: 'Менеджер',
@@ -35,6 +31,10 @@ export const ClientsPage: React.FC = (): JSX.Element => {
         name: 'actions',
         header: 'Действия',
     }];
+
+    React.useEffect(() => {
+        setClients(dataClients);
+    }, []);
 
     React.useEffect(() => {
         document.title = "Клиенты";

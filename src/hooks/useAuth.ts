@@ -1,16 +1,12 @@
-import {useState, useCallback, useEffect} from 'react';
+import React, {useState, useCallback} from 'react';
 
 const storageName = 'userData';
 
 export const useAuth = () => {
-  //======= залипуха, чтобы не редиректило в страницу по умолчанию
   let initialToken = null;
   const data = JSON.parse(localStorage.getItem('userData') || '{}');
-    if (data && data.token) {
-      initialToken = data.token;
-    }
-  // залипуха окончена
-
+  if (data && data.token) initialToken = data.token;
+  
   const [token, setToken] = useState(initialToken);
   const [email, setEmail] = useState(null);
   const [ready, setReady] = useState(false);
@@ -27,14 +23,14 @@ export const useAuth = () => {
   }, [token]);
 
 
-  const logout = useCallback(() => {
+  const logout = () => {
     setToken(null);
     setUserId(null);
     localStorage.removeItem(storageName);
-  }, [])
+  }
 
   // fill authContext from localStorage when login
-  useEffect(() => {
+  React.useEffect(() => {
     const data = JSON.parse(localStorage.getItem(storageName) || '{}')
 
     if (data && data.token) {
@@ -42,6 +38,10 @@ export const useAuth = () => {
       setReady(true)
     }
   }, [login])
+
+  React.useEffect(() => {
+    
+  },[])
 
   return { login, email, logout, token, userId, ready }
 }

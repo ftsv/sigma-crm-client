@@ -3,12 +3,14 @@ import { ThemeContext } from '../context/ThemeContext';
 import { ToastsContext } from '../context/ToastsContext';
 import { Pagination } from '../components/Pagination';
 import cn from 'classnames';
+import CurrencyFormatter from '../services/currency-formatting';
 
 export const ProfilePage: React.FC = () => {
     const { darkMode } = useContext(ThemeContext);
     const { addToast } = useContext(ToastsContext);
     const [ pagination, setPagination ] = useState({page: 1, limit: 10, total: 0, pages: 10, skip: 0})
     const [body, setBody] = useState("");
+    const [price, setPrice] = React.useState(10);
 
     const submit = (e: any) => {
         if (e.key === "Enter"){
@@ -49,6 +51,16 @@ export const ProfilePage: React.FC = () => {
                         className="bg-dark text-white" 
                     />
                     <input type="number" name="pages" value={pagination.pages} min={1} onChange={e => handlerPagination(e)} />
+                </div>
+                <div className='mt-5'>
+                    <input 
+                        type="number"
+                        value={price}
+                        onChange={(e) => setPrice(parseInt(e.target.value))}
+                    />
+                    <div>
+                        <span>{CurrencyFormatter(price, 'USD', 'USA')}</span>
+                    </div>
                 </div>
             </div>
         </div>
