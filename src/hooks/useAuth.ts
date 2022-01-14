@@ -20,7 +20,7 @@ export const useAuth = () => {
     localStorage.setItem(storageName, JSON.stringify({
       userId: id, token: jwtToken, email: email,
     }));
-  }, [token]);
+  }, []);
 
 
   const logout = () => {

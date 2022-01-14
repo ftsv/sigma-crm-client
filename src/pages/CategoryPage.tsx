@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import queryStringCreator from '../services/query-string-creator';
-import cn from 'classnames';
+// import cn from 'classnames';
 
 import { AuthContext } from '../context/AuthContext';
 import { ThemeContext } from '../context/ThemeContext';
@@ -67,7 +67,7 @@ export const CategoryPage = () => {
       <ModalCategory darkMode={darkMode} addCategory={addItem} />
       <div>
         {loading 
-          ? (<div className="container justify-content-center mt-3">
+          ? (<div className="d-flex justify-content-center mt-3">
               <Spinner animation="border" variant="secondary" />
             </div>
           )
@@ -85,6 +85,11 @@ export const CategoryPage = () => {
                 editCategory={editItem} 
                 fetchCategories={fetch}
               />
+              {(pagination.limit > 10 && pagination.total > pagination.limit) && <Pagination 
+                  pagination={pagination} 
+                  setPagination={setPagination} 
+                  darkMode={darkMode} 
+              />}
             </div>
           )
         }

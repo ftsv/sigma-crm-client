@@ -36,11 +36,11 @@ export const useHttp = () => {
       
     } catch (e: any) {
       setLoading(false)
-      e.message == 'Нет авторизации' && logout();
-      // setError(e.message)
-      // throw e
+      e.message === 'Нет авторизации' && logout();
+      setError(e.message)
+      throw e
     }
-  }, [])
+  }, []);
 
   const clearError = React.useCallback(() => setError(null), [])
 

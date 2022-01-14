@@ -17,7 +17,7 @@ const ToastMessage = (props: ToastListProps) => {
   }, [toastList])
 
   return (
-    <ToastContainer position={position} >
+    <ToastContainer position={position} style={{zIndex: 2000,}}>
       {toasts?.length
       ? toasts.map(toast => (
         <div key={toast.id}>

@@ -2,6 +2,7 @@ import { Navigate, useRoutes } from "react-router-dom";
 import { AuthPage } from "./pages/AuthPage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { UsersPage } from "./pages/UsersPage";
+import { UserPage } from "./pages/UserPage";
 import { ClientsPage } from "./pages/ClientsPage";
 import { CategoryPage } from "./pages/CategoryPage";
 import { Todos } from "./pages/Todos";
@@ -34,6 +35,7 @@ export const Routing: React.FC<RoutingProps> = ({auth}): JSX.Element => {
         {path: '/todos', element: <Todos />},
         {path: '/profile', element: <ProfilePage />},
         {path: '/users', element: <UsersPage />},
+        {path: '/user/:id', element: <UserPage />},
         {path: '/category', element: <CategoryPage />},
         {path: '/clients', element: <ClientsPage />},
         {path: '/cases', element: <CasesPage />},

@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useState } from 'react';
 import { ThemeContext } from '../context/ThemeContext';
 import { ToastsContext } from '../context/ToastsContext';
 import { Pagination } from '../components/Pagination';
-import cn from 'classnames';
+// import cn from 'classnames';
 import CurrencyFormatter from '../services/currency-formatting';
 
 export const ProfilePage: React.FC = () => {
