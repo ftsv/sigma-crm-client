@@ -5,6 +5,7 @@ import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import cn from 'classnames';
 import { ButtonEye } from './ButtonEye';
 import { Link } from 'react-router-dom';
+import { TooltipWrapper } from './comp-utils/TooltipWrapper';
 
 interface UserListProps {
   users: IUser[];
@@ -29,7 +30,7 @@ const UserList: React.FC<UserListProps> = React.memo(({ users, skip }) => {
               <tr>
                   <th scope="col">#</th>
                   <th scope="col">ФИО</th>
-                  <th scope="col">Email</th>
+                  {/* <th scope="col">Email</th> */}
                   <th scope="col">Роли</th>
                   <th scope="col">Действия</th>
               </tr>
@@ -45,16 +46,11 @@ const UserList: React.FC<UserListProps> = React.memo(({ users, skip }) => {
                   }
                 </td>
                 <td>
-                  {user.name ? user.name : ""}
+                  {user.fullName || ""}
                 </td>
-                <td>
-                  {(user.email.length > 40)
-                    ? (<OverlayTrigger overlay={<Tooltip id="tooltip-disabled">{user.email}</Tooltip>}>
-                        <span>{user.email.slice(0, 37) + "..."}</span>
-                      </OverlayTrigger>)
-                    : user.email
-                  }
-                </td>
+                {/* <td>
+                  <TooltipWrapper data={user.email} length={10} />
+                </td> */}
                 <td>
                   {
                     (user.roles.length > 0)

@@ -35,7 +35,7 @@ export const ModalUser: React.FC<ModalProps> = ({
   const [item, setItem] = useState<IUser>(clearItem);
 
   const handleForm = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setItem({...item, [e.target.name]: e.target.value})
+    setItem({...item, [e.target.name]: e.target.value});
   }
 
   const handleSubmit = async () => {

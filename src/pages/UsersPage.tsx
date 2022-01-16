@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 // import cn from 'classnames';
 import { ThemeContext } from '../context/ThemeContext';
@@ -13,8 +13,8 @@ import { Pagination } from '../components/Pagination';
 import { tokenChecker } from '../services/token-checker';
 
 export const UsersPage = () => {
-    const { darkMode } = useContext(ThemeContext);
-    const { addToast } = useContext(ToastsContext);
+    const { darkMode } = React.useContext(ThemeContext);
+    const { addToast } = React.useContext(ToastsContext);
     const location = useLocation();
     const { request, error, loading } = useHttp();
     const [users, setUsers] = React.useState<IUser[]>([]);
@@ -37,7 +37,7 @@ export const UsersPage = () => {
 
     const addItem = React.useCallback(async (item) => {
         try {
-            const data = await request('/api/auth/register', 'POST', {...item});
+            const data = await request('/api/user/register', 'POST', {...item}, tokenChecker());
             addToast('Выполнено', `${data.message}`, 'success', 7000);
             fetch();
             return true;
