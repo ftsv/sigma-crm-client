@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import { ThemeContext } from '../context/ThemeContext';
 import { IUser } from '../types/User';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import cn from 'classnames';
 import { ButtonEye } from './ButtonEye';
 import { Link } from 'react-router-dom';
-import { TooltipWrapper } from './comp-utils/TooltipWrapper';
+import AUTH_ROUTES from '../constants/index';
+// import { TooltipWrapper } from './comp-utils/TooltipWrapper';
 
 interface UserListProps {
   users: IUser[];
@@ -61,7 +61,7 @@ const UserList: React.FC<UserListProps> = React.memo(({ users, skip }) => {
                   }
                 </td> 
                 <td className="d-flex justify-content-end">
-                  <Link to={ `/user/${user._id}` } ><ButtonEye darkMode={darkMode} /></Link>
+                  <Link to={ `/${AUTH_ROUTES.USER}/${user._id}` } ><ButtonEye darkMode={darkMode} /></Link>
                 </td>
               </tr>
             ))}

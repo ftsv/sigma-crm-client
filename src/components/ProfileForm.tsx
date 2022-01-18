@@ -7,12 +7,14 @@ import { InputGroupWithLock } from './InputGroupWithLock';
 interface ProfilePageProps {
   user?: IUser;
   setUser: (data: any) => void;
+  editUser: (user: IUser) => void;
   darkMode: boolean;
 }
 
 export const ProfileForm: React.FC<ProfilePageProps>  = ({
   user,
   setUser,
+  editUser,
   darkMode = false,
 }): JSX.Element => {
   const [disabled, setDisabled] = React.useState(true);
@@ -24,9 +26,18 @@ export const ProfileForm: React.FC<ProfilePageProps>  = ({
 
   const handleDisable = () => setDisabled(!disabled);
 
+  const handleDelete = (e: FormEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    // TODO: сделать окно подтверждения действия
+    // user && deleteUser(user);
+    //navigate
+  }
+
   const handleSubmit = (e: FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    console.log('форма отработала');
+    // TODO: сделать окно подтверждения действия
+    user && editUser(user);
+    setDisabled(true);
   }
 
   return (
@@ -82,6 +93,15 @@ export const ProfileForm: React.FC<ProfilePageProps>  = ({
             onClick={(e) => handleSubmit(e)}
           >
             Изменить данные
+          </button>
+          <button
+            className={cn("btn btn-sm ms-3", {
+              "btn-outline-danger": disabled,
+              "btn-danger": !disabled,
+            })}
+            onClick={(e) => handleDelete(e)}
+          >
+            Удалить пользователя
           </button>
         </fieldset>
       </form>

@@ -19,18 +19,27 @@ export const UserPage = React.memo(() => {
     const fetch = React.useCallback(
         async () => {
             try {
-                const fetched: IUser = await request(`/api/user/get/${location.pathname.split('/')[2]}`,'GET', null, tokenChecker());
+                const fetched: IUser = await request(`/api/user/${location.pathname.split('/')[2]}`,'GET', null, tokenChecker());
                 setUser(fetched);
                 return fetched;
             } catch (err: any) {}
         }, [])
+
+    const editUser = React.useCallback(
+        async (user) => {
+            try {
+                const fetched: IUser = await request(`/api/user/${location.pathname.split('/')[2]}`,'GET', null, tokenChecker());
+                setUser(fetched);
+                return fetched;
+            } catch (err: any) {}
+    }, [user])
 
     React.useEffect(() => {
         error !== null && addToast('Ошибка', `${error}`, 'danger', 10000);
     }, [error, addToast]);
 
     React.useEffect(() => {
-        fetch();
+        !user && fetch();
         document.title = user?.fullName || 'Пользователь';
     }, [user?.fullName]);
 
@@ -38,12 +47,13 @@ export const UserPage = React.memo(() => {
         <>
             <div className="mb-2">
                 <span>
-                    здесь можно добавить breadchumb
+                    на этом месте мог быть ваш шикарный breadchumb 
                 </span>
             </div>
             <ProfileForm
                 user={user}
                 setUser={setUser}
+                editUser={editUser}
                 darkMode={darkMode}
             />
         </>

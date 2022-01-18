@@ -11,6 +11,8 @@ import { SimpleWrapper } from "./containers/SimpleWrapper";
 import { CasePage } from "./pages/CasePage";
 import { CasesPage } from "./pages/CasesPage";
 import { AuthWrapper } from "./containers/AuthWrapper";
+import AUTH_ROUTES from './constants/index';
+import SIMPLE_ROUTES from './constants/index';
 
 interface RoutingProps {
   auth: boolean;
@@ -21,9 +23,9 @@ export const Routing: React.FC<RoutingProps> = ({auth}): JSX.Element => {
       path: '/',
       element: <SimpleWrapper />,
       children: [
-        {path: "/auth", element: <AuthPage />},
-        {path: '/', element: <Navigate to="/auth" />},
-        {path: '*', element: <Navigate to="/auth" />},
+        {path: `/${SIMPLE_ROUTES.AUTH}`, element: <AuthPage />},
+        {path: '/', element: <Navigate to={`/${SIMPLE_ROUTES.AUTH}`} />},
+        {path: '*', element: <Navigate to={`/${SIMPLE_ROUTES.AUTH}`} />},
       ]
     }
 
@@ -33,16 +35,16 @@ export const Routing: React.FC<RoutingProps> = ({auth}): JSX.Element => {
       element: <AuthWrapper />,
       children: [
         {path: '/todos', element: <Todos />},
-        {path: '/profile', element: <ProfilePage />},
-        {path: '/users', element: <UsersPage />},
-        {path: '/user/:id', element: <UserPage />},
-        {path: '/category', element: <CategoryPage />},
-        {path: '/clients', element: <ClientsPage />},
-        {path: '/cases', element: <CasesPage />},
-        {path: '/case/:id', element: <CasePage />},
-        {path: '/auth', element: <Navigate to="/profile" />},
-        {path: '/', element: <Navigate to="/profile" />},
-        {path: '*', element: <Navigate to="/profile" />},
+        {path: `/${AUTH_ROUTES.PROFILE}`, element: <ProfilePage />},
+        {path: `/${AUTH_ROUTES.USERS}`, element: <UsersPage />},
+        {path: `/${AUTH_ROUTES.USER}/:id`, element: <UserPage />},
+        {path: `/${AUTH_ROUTES.CATEGORY}`, element: <CategoryPage />},
+        {path: `/${AUTH_ROUTES.CLIENTS}`, element: <ClientsPage />},
+        {path: `/${AUTH_ROUTES.CASES}`, element: <CasesPage />},
+        {path: `/${AUTH_ROUTES.CASE}/:id`, element: <CasePage />},
+        {path: `/${SIMPLE_ROUTES.AUTH}`, element: <Navigate to={`/${AUTH_ROUTES.PROFILE}`} />},
+        {path: '/', element: <Navigate to={`/${AUTH_ROUTES.PROFILE}`} />},
+        {path: '*', element: <Navigate to={`/${AUTH_ROUTES.PROFILE}`} />},
       ]
     }
   }
