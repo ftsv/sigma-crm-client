@@ -28,7 +28,7 @@ export const Routing: React.FC<RoutingProps> = ({auth}): JSX.Element => {
         {path: '*', element: <Navigate to={`/${SIMPLE_ROUTES.AUTH}`} />},
       ]
     }
-
+// TODO: вынести список роутов в отдельный файл, а здесь только map или forEach перебор в children
   if (auth) {
     authLayout = {
       path: '/',

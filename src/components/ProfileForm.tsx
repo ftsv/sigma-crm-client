@@ -3,6 +3,8 @@ import cn from 'classnames';
 import { IUser } from '../types/User';
 import { Lock, Unlock } from 'react-bootstrap-icons';
 import { InputGroupWithLock } from './InputGroupWithLock';
+// import { useNavigate } from 'react-router-dom';
+// import AUTH_ROUTES from '../constants/index';
 
 interface ProfilePageProps {
   user?: IUser;
@@ -17,21 +19,23 @@ export const ProfileForm: React.FC<ProfilePageProps>  = ({
   editUser,
   darkMode = false,
 }): JSX.Element => {
+  // const navigate = useNavigate();
   const [disabled, setDisabled] = React.useState(true);
-  console.log({ user });
 
-  const handleForm = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUser({...user, [e.target.name]: e.target.value});
+  const handleForm = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLInputElement>) => {
+    switch (e.target.type) {
+      case 'checkbox':
+        setUser({...user, [e.target.name]: e.target.checked});
+        break;
+      case 'text':
+      default:
+        setUser({...user, [e.target.name]: e.target.value});
+        break;
+    }
+    // console.log({ user });
   }
 
   const handleDisable = () => setDisabled(!disabled);
-
-  const handleDelete = (e: FormEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    // TODO: сделать окно подтверждения действия
-    // user && deleteUser(user);
-    //navigate
-  }
 
   const handleSubmit = (e: FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -83,10 +87,30 @@ export const ProfileForm: React.FC<ProfilePageProps>  = ({
             darkMode={darkMode}
             disabled={disabled}
           />
+          <InputGroupWithLock
+            type='password'
+            label='Пароль'
+            name='password'
+            data={user?.password}
+            handleForm={handleForm}
+            darkMode={darkMode}
+            disabled={disabled}
+          />
         <fieldset disabled={disabled}>
+          <div className="form-check form-switch">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              id="isBlocked"
+              name="isBlocked"
+              onChange={(e) => handleForm(e)}
+              checked={user?.isBlocked}
+            />
+            <label className="form-check-label" htmlFor="isBlocked">Блокировка пользователя</label>
+          </div>
           <button
             type="submit"
-            className={cn("btn btn-sm", {
+            className={cn("btn btn-sm mt-4", {
               "btn-outline-primary": disabled,
               "btn-primary": !disabled,
             })}
@@ -94,15 +118,7 @@ export const ProfileForm: React.FC<ProfilePageProps>  = ({
           >
             Изменить данные
           </button>
-          <button
-            className={cn("btn btn-sm ms-3", {
-              "btn-outline-danger": disabled,
-              "btn-danger": !disabled,
-            })}
-            onClick={(e) => handleDelete(e)}
-          >
-            Удалить пользователя
-          </button>
+
         </fieldset>
       </form>
     </div>

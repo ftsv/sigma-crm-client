@@ -17,7 +17,7 @@ import {
 import { AuthContext } from '../context/AuthContext';
 import { ThemeContext } from '../context/ThemeContext';
 
-const NavbarComp = () => {
+const NavbarComponent = () => {
   const auth = useContext(AuthContext);
   const { darkMode, toggleDarkMode } = useContext(ThemeContext)
   const navigate = useNavigate();
@@ -115,4 +115,4 @@ const NavbarComp = () => {
   );
 }
 
-export default NavbarComp;
+export default NavbarComponent;

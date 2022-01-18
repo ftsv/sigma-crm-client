@@ -46,16 +46,6 @@ export const UsersPage = () => {
         }
     },[])
 
-    //либо сделать модальным, но лучше вынести на отдельную страницу Карточки пользователя
-    const editItem = React.useCallback(async (item) => {
-        try {
-            await request(`/api/user/${item._id}`, 'PUT', {...item}, tokenChecker());
-            addToast("Выполнено", `Пользователь ${item.title.toLowerCase()} изменен!`, "success", 7000);
-            fetch();
-        } catch (err: any) {}
-        
-    },[])
-
     useEffect(() => {
         error !== null && addToast('Ошибка', `${error}`, 'danger', 10000);
     }, [error, addToast]);

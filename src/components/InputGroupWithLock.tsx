@@ -11,7 +11,7 @@ interface InputGroupWithLockProps {
   handleForm: (e: HandleFormProps) => void;
   darkMode?: boolean;
   disabled?: boolean;
-  type?: 'text';
+  type?: 'text' | 'password';
 }
 
 export const InputGroupWithLock: React.FC<InputGroupWithLockProps> = (

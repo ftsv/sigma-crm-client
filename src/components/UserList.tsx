@@ -5,7 +5,7 @@ import cn from 'classnames';
 import { ButtonEye } from './ButtonEye';
 import { Link } from 'react-router-dom';
 import AUTH_ROUTES from '../constants/index';
-// import { TooltipWrapper } from './comp-utils/TooltipWrapper';
+import { TooltipWrapper } from './comp-utils/TooltipWrapper';
 
 interface UserListProps {
   users: IUser[];
@@ -30,7 +30,7 @@ const UserList: React.FC<UserListProps> = React.memo(({ users, skip }) => {
               <tr>
                   <th scope="col">#</th>
                   <th scope="col">ФИО</th>
-                  {/* <th scope="col">Email</th> */}
+                  <th scope="col">Email</th>
                   <th scope="col">Роли</th>
                   <th scope="col">Действия</th>
               </tr>
@@ -48,9 +48,9 @@ const UserList: React.FC<UserListProps> = React.memo(({ users, skip }) => {
                 <td>
                   {user.fullName || ""}
                 </td>
-                {/* <td>
+                <td>
                   <TooltipWrapper data={user.email} length={10} />
-                </td> */}
+                </td>
                 <td>
                   {
                     (user.roles.length > 0)

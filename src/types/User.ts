@@ -12,4 +12,5 @@ export interface IUser {
   password?: string;
   roles: IRole[];
   createdAt?: Date;
+  isBlocked?: boolean;
 }

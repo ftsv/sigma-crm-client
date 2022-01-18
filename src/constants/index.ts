@@ -16,10 +16,12 @@ const AUTH_ROUTES = {
     USER,
     USERS,
 }
+
 const SIMPLE_ROUTES = {
     AUTH,
 }
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default {
     AUTH_ROUTES,
     SIMPLE_ROUTES,
