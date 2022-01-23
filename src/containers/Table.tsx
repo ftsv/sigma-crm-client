@@ -18,7 +18,6 @@ interface TableHeadersProps {
 
 export const Table: React.FC<TableProps> = React.memo(({ tableHeader, tableRows, darkMode = false, skip = 0 }): JSX.Element => {
     const [tableHeaders, setTableHeaders] = React.useState(tableHeader);
-    console.log(tableRows.length);
     return (
         <>
             <table className={cn("table", "table-hover", {
@@ -52,8 +51,8 @@ export const Table: React.FC<TableProps> = React.memo(({ tableHeader, tableRows,
                                 </td>
                                 <td>
                                     {row.cases.length
-                                        ? row.cases.map((link: string) => (
-                                            <span> <Link to={ `/case/${link}` }>{link}</Link></span>
+                                        ? row.cases.map((item: string) => (
+                                            <span key={item}> <Link to={ `/case/${item}` }>{item}</Link></span>
                                         ))
                                         : ""
                                     }

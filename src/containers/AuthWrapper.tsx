@@ -1,26 +1,37 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import cn from 'classnames';
 import { ThemeContext } from '../context/ThemeContext';
-import NavbarComp from '../components/Navbar';
+import NavbarComponent from '../components/Navbar';
+import { AuthContext } from '../context/AuthContext';
+import SIMPLE_ROUTES from '../constants/index';
 
 export const AuthWrapper: React.FC = (): JSX.Element => {
     const { darkMode } = React.useContext(ThemeContext);
+    const auth = React.useContext(AuthContext);
+    const navigate = useNavigate();
+
+    React.useEffect(() => {
+        if(!auth.token) {
+            auth.logout();
+            navigate(`/${SIMPLE_ROUTES.AUTH}`, {replace: true});
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [auth.token]);
     return (
         <>
-            <NavbarComp />
+            <NavbarComponent />
             <div
-                className={cn({
+                className={cn('pt-5', 'pb-5', {
                     'bg-dark': darkMode,
                     'text-white': darkMode,
                 })}
-                style={{ minHeight: '100vh', padding: '80px 0' }}
+                style={{ minHeight: '100vh'}}
             >
-                <div className='container'>
+                <div className='mt-4 mb-4 container'>
                     <Outlet />
                 </div>
             </div>
         </>
-        
     );
 };

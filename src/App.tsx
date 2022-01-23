@@ -14,7 +14,6 @@ const App: React.FC = (): JSX.Element => (
           <ThemeProvider>
             <ToastsProvider>
                 <BrowserRouter>
-                  {/* {isAuth && <NavbarComp />} */}
                   <Routing auth={!!value.token} />
                 </BrowserRouter>
                 <ToastsContext.Consumer>

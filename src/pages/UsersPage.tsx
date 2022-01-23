@@ -1,7 +1,6 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 // import cn from 'classnames';
-import { AuthContext } from '../context/AuthContext';
 import { ThemeContext } from '../context/ThemeContext';
 import { ToastsContext } from '../context/ToastsContext';
 import queryStringCreator from '../services/query-string-creator';
@@ -11,13 +10,12 @@ import { IUser } from '../types/User';
 import UserList from '../components/UserList';
 import { ModalUser } from '../components/Modals/ModalUser';
 import { Pagination } from '../components/Pagination';
+import { tokenChecker } from '../services/token-checker';
 
 export const UsersPage = () => {
-    const auth = useContext( AuthContext );
-    const { darkMode } = useContext(ThemeContext);
-    const { addToast } = useContext(ToastsContext);
+    const { darkMode } = React.useContext(ThemeContext);
+    const { addToast } = React.useContext(ToastsContext);
     const location = useLocation();
-    // const navigate = useNavigate();
     const { request, error, loading } = useHttp();
     const [users, setUsers] = React.useState<IUser[]>([]);
     const [pagination, setPagination] = React.useState({page: 1, limit: 10, total: 0, pages: 0, skip: 0}); // возможно необходимо сделать контекст фильтра в localStorage для первичного отображения
@@ -31,36 +29,25 @@ export const UsersPage = () => {
     // };
     const fetch = async () => {
         try {
-            const {pagination, users} = await request(`/api/user/all${location.search}`,'GET', null, {
-                Authorization: `Bearer ${auth.token}` 
-            });
+            const {pagination, users} = await request(`/api/user/all${location.search}`,'GET', null, tokenChecker());
             setPagination(pagination);
             setUsers(users);
-        } catch (e: any) {}
+        } catch (err: any) {}
     }
 
     const addItem = React.useCallback(async (item) => {
         try {
-            const data = await request('/api/auth/register', 'POST', {...item});
+            const data = await request('/api/user/register', 'POST', {...item}, tokenChecker());
             addToast('Выполнено', `${data.message}`, 'success', 7000);
             fetch();
-        } catch (e: any) {}
-    },[])
-
-    //либо сделать модальным, но лучше вынести на отдельную страницу Карточки пользователя
-    const editItem = React.useCallback(async (item) => {
-        try {
-            await request(`/api/user/${item._id}`, 'PUT', {...item},{
-                Authorization: `Bearer ${auth.token}` 
-            });
-            addToast("Выполнено", `Категория ${item.title.toLowerCase()} изменена!`, "success", 7000);
-            fetch();
-        } catch (e: any) {}
-        
+            return true;
+        } catch (err: any) {
+            return false;
+        }
     },[])
 
     useEffect(() => {
-        error !== null && addToast('Ошибка', `${error}`, 'danger',7000);
+        error !== null && addToast('Ошибка', `${error}`, 'danger', 10000);
     }, [error, addToast]);
 
     useEffect(() => {
@@ -79,7 +66,7 @@ export const UsersPage = () => {
                 <ModalUser darkMode={darkMode} addItem={addItem} />
             </div>
             {loading 
-                ? (<div className="container justify-content-center mt-3">
+                ? (<div className="d-flex justify-content-center mt-3">
                     <Spinner animation="border" variant="secondary" />
                 </div>)
                 : (<div>
@@ -91,12 +78,12 @@ export const UsersPage = () => {
                         total={true}
                         limit={true}
                     />
-                    {(users && users.length) && <UserList users={users} skip={pagination.skip} />}
-                    <Pagination 
+                    {(users?.length) && <UserList users={users} skip={pagination.skip} />}
+                    {(pagination.limit > 10 && pagination.total > pagination.limit) && <Pagination 
                         pagination={pagination} 
                         setPagination={setPagination} 
                         darkMode={darkMode} 
-                    />
+                    />}
                 </div>)
             }
         </div>

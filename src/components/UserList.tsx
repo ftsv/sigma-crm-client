@@ -1,17 +1,20 @@
 import React, { useContext } from 'react';
 import { ThemeContext } from '../context/ThemeContext';
 import { IUser } from '../types/User';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import cn from 'classnames';
 import { ButtonEye } from './ButtonEye';
+import { Link } from 'react-router-dom';
+import AUTH_ROUTES from '../constants/index';
+import { TooltipWrapper } from './comp-utils/TooltipWrapper';
+import { LockFill } from 'react-bootstrap-icons';
 
 interface UserListProps {
   users: IUser[];
   skip: number
 }
 
-const UserList: React.FC<UserListProps> = React.memo(({users, skip}) => {   
-  const {darkMode} = useContext(ThemeContext);
+const UserList: React.FC<UserListProps> = React.memo(({ users, skip }) => {   
+  const { darkMode } = useContext(ThemeContext);
 
   if (!users.length) {
     return null;
@@ -21,12 +24,14 @@ const UserList: React.FC<UserListProps> = React.memo(({users, skip}) => {
     <div className="container" style={{marginTop: "20px"}}>
         <table className={cn("table", "table-sm", "table-hover", "table-bordered", 
             {
-                'table-dark': darkMode,
+              "table-dark": darkMode,
             }
         )}>
           <thead>
               <tr>
+                  <th scope="col"><LockFill /></th>
                   <th scope="col">#</th>
+                  <th scope="col">ФИО</th>
                   <th scope="col">Email</th>
                   <th scope="col">Роли</th>
                   <th scope="col">Действия</th>
@@ -35,20 +40,21 @@ const UserList: React.FC<UserListProps> = React.memo(({users, skip}) => {
           <tbody>
             {users.map((user, i: number) => (
               <tr key={user.email}>
+                <td className="d-flex justify-content-center">
+                  { user?.isBlocked ? <span className="btn btn-sm btn-danger"><LockFill /></span> : null }
+                </td>
                 <td> {/* array start from 0 need + 1 */}
                   {
                     (skip && skip > 0) 
                     ? (skip + i + 1) 
                     : (i + 1) 
                   }
-                </td> 
+                </td>
                 <td>
-                  {(user.email.length > 40)
-                    ? (<OverlayTrigger overlay={<Tooltip id="tooltip-disabled">{user.email}</Tooltip>}>
-                        <span>{user.email.slice(0, 37) + "..."}</span>
-                      </OverlayTrigger>)
-                    : user.email
-                  }
+                  {user.fullName || ""}
+                </td>
+                <td>
+                  <TooltipWrapper data={user.email} length={10} />
                 </td>
                 <td>
                   {
@@ -60,7 +66,7 @@ const UserList: React.FC<UserListProps> = React.memo(({users, skip}) => {
                   }
                 </td> 
                 <td className="d-flex justify-content-end">
-                  <ButtonEye darkMode={darkMode} />
+                  <Link to={ `/${AUTH_ROUTES.USER}/${user._id}` } ><ButtonEye darkMode={darkMode} /></Link>
                 </td>
               </tr>
             ))}

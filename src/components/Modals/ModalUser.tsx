@@ -35,18 +35,19 @@ export const ModalUser: React.FC<ModalProps> = ({
   const [item, setItem] = useState<IUser>(clearItem);
 
   const handleForm = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setItem({...item, [e.target.name]: e.target.value})
+    setItem({...item, [e.target.name]: e.target.value});
   }
 
-  const handleSubmit = () => {
-    try {
-      addItem(item);
-      setShow(false);
-      setIsShow && setIsShow(false);
-      setItem(clearItem);
-      setCurrentItem && setCurrentItem(clearItem);
-      setShowPass(false);
-    } catch (e) {}
+  const handleSubmit = async () => {
+    let success = await addItem(item);
+    if (!success) {
+      return;
+    }
+    setShow(false);
+    setIsShow && setIsShow(false);
+    setItem(clearItem);
+    setCurrentItem && setCurrentItem(clearItem);
+    setShowPass(false);
   }
 
 
@@ -86,12 +87,15 @@ export const ModalUser: React.FC<ModalProps> = ({
       <Modal 
         show={show} 
         onHide={handleClose} 
+        autoFocus={true}
+        keyboard={true}
         className="was-validated"
       >
         <Modal.Header closeButton>
           <Modal.Title>Добавление пользователя</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+
           <div className="mb-3 position-relative">
             <label htmlFor="item1" className="form-label">Email<span className="text-danger"><strong> *</strong></span></label>
             <input 
@@ -105,19 +109,47 @@ export const ModalUser: React.FC<ModalProps> = ({
               required
             />
           </div>
+
           <div className="mb-3">
-            <label htmlFor="item2" className="form-label">Имя пользователя</label>
+            <label htmlFor="itemLN" className="form-label">Фамилия</label>
             <input 
               type="text" 
               className="form-control" 
               id="item2" 
-              aria-describedby="item2Helper"
-              name="name"
-              value={item.name}
+              aria-describedby="itemLNHelper"
+              name="lastName"
+              value={item.lastName ? item.lastName : ''}
               onChange={(e) => handleForm(e)}
             />
-            <div id="item2Helper" className="form-text">Не более 40 символов</div>
           </div>
+
+          <div className="mb-3">
+            <label htmlFor="itemN" className="form-label">Имя</label>
+            <input 
+              type="text" 
+              className="form-control" 
+              id="itemN" 
+              aria-describedby="itemNHelper"
+              name="name"
+              value={item.name ? item.name : ''}
+              onChange={(e) => handleForm(e)}
+            />
+            {/* <div id="itemNHelper" className="form-text">Не более 40 символов</div> */}
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="itemMN" className="form-label">Отчество</label>
+            <input 
+              type="text" 
+              className="form-control" 
+              id="item2" 
+              aria-describedby="itemMNHelper"
+              name="middleName"
+              value={item.middleName ? item.middleName : ''}
+              onChange={(e) => handleForm(e)}
+            />
+          </div>
+
           <label htmlFor="item3" className="form-label">Пароль<span className="text-danger"><strong> *</strong></span></label>
           <div className="input-group mb-3">
             <input 

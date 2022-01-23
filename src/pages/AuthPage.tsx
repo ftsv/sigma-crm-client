@@ -1,15 +1,16 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React from 'react';
 import { useHttp } from '../hooks/useHttp';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { ToastsContext } from '../context/ToastsContext';
+import AUTH_ROUTES from '../constants';
 
 export const AuthPage = () => {
-  const auth = useContext(AuthContext);
-  const { addToast } = useContext(ToastsContext);
+  const auth = React.useContext(AuthContext);
+  const { addToast } = React.useContext(ToastsContext);
   const navigate = useNavigate();
   const {request} = useHttp();
-  const [form, setForm] = useState({
+  const [form, setForm] = React.useState({
     email: "",
     password: ""
   });
@@ -33,8 +34,8 @@ export const AuthPage = () => {
     try {
       const data = await request('/api/auth/login', 'POST', {...form});
 
-      auth.login(data.token, data.userId, data.email);
-      navigate('/profile', {replace: true});
+      auth.login(data.token, data.userId, data.email, data.initials);
+      navigate(AUTH_ROUTES.PROFILE, {replace: true});
     } catch (e: any) {
         addToast('Ошибка', `${e.message}`, 'danger', 7000);
     }
@@ -51,10 +52,11 @@ export const AuthPage = () => {
           <div className="mb-3">
             <label htmlFor="InputEmail1" className="form-label">Email адрес</label>
             <input 
-              type="email" 
-              className="form-control" 
-              id="InputEmail1" 
-              name="email" 
+              type="email"
+              className="form-control"
+              id="InputEmail1"
+              name="email"
+              autoComplete="email"
               value={form.email} 
               onChange={e => handleChangeForm(e)}
             />
@@ -62,9 +64,10 @@ export const AuthPage = () => {
           <div className="mb-3">
             <label htmlFor="InputPassword1" className="form-label">Пароль</label>
             <input 
-              type="password" 
-              className="form-control" 
-              id="InputPassword1" 
+              type="password"
+              className="form-control"
+              id="InputPassword1"
+              autoComplete="current-password"
               aria-describedby="passwordHelp"
               name="password"
               value={form.password}

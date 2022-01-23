@@ -8,13 +8,13 @@ export const SimpleWrapper: React.FC = (): JSX.Element => {
     return (
         <>
             <div
-                className={cn({
+                className={cn('pt-5', 'pb-5', {
                     'bg-dark': darkMode,
                     'text-white': darkMode,
                 })}
-                style={{ minHeight: '100vh', padding: '80px 0' }}
+                style={{ minHeight: '100vh'}}
             >
-                <div className='container'>
+                <div className='mt-4 mb-4 container'>
                     <Outlet />
                 </div>
             </div>
