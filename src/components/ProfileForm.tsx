@@ -2,27 +2,35 @@ import React, { FormEvent } from 'react';
 import cn from 'classnames';
 import { IUser } from '../types/User';
 import { Lock, Unlock } from 'react-bootstrap-icons';
-import { InputGroupWithLock } from './InputGroupWithLock';
-// import { useNavigate } from 'react-router-dom';
-// import AUTH_ROUTES from '../constants/index';
+import { InputGroupWithLock } from './FormItems/InputGroupWithLock';
+import { InputPassGroup } from './FormItems/InputPassGroup';
 
 interface ProfilePageProps {
   user?: IUser;
   setUser: (data: any) => void;
   editUser: (user: IUser) => void;
-  darkMode: boolean;
+  darkMode?: boolean;
+  profile?: boolean;
 }
 
 export const ProfileForm: React.FC<ProfilePageProps>  = ({
-  user,
+  user = {
+    lastName: '',
+    name: '',
+    middleName: '',
+    email: '',
+    password: '',
+    roles: [{value: ''}]
+  },
   setUser,
   editUser,
   darkMode = false,
+  profile = false,
 }): JSX.Element => {
-  // const navigate = useNavigate();
   const [disabled, setDisabled] = React.useState(true);
+  const [formDisabled, setFormDisabled] = React.useState(true);
 
-  const handleForm = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLInputElement>) => {
+  const handleForm = (e: React.ChangeEvent<HTMLInputElement>) => {
     switch (e.target.type) {
       case 'checkbox':
         setUser({...user, [e.target.name]: e.target.checked});
@@ -32,7 +40,6 @@ export const ProfileForm: React.FC<ProfilePageProps>  = ({
         setUser({...user, [e.target.name]: e.target.value});
         break;
     }
-    // console.log({ user });
   }
 
   const handleDisable = () => setDisabled(!disabled);
@@ -56,46 +63,62 @@ export const ProfileForm: React.FC<ProfilePageProps>  = ({
             
         </span>
           <InputGroupWithLock
-            label='Фамилия'
-            name='lastName'
-            data={user?.lastName}
+            label="Фамилия"
+            name="lastName"
+            autoComplete="family-name"
+            value={user?.lastName}
             handleForm={handleForm}
             darkMode={darkMode}
             disabled={disabled}
           />
           <InputGroupWithLock
-            label='Имя'
-            name='name'
-            data={user?.name}
+            label="Имя"
+            name="name"
+            autoComplete="given-name"
+            value={user?.name}
             handleForm={handleForm}
             darkMode={darkMode}
             disabled={disabled}
           />
           <InputGroupWithLock
-            label='Отчество'
-            name='middleName'
-            data={user?.middleName}
+            label="Отчество"
+            name="middleName"
+            autoComplete="additional-name"
+            value={user?.middleName}
             handleForm={handleForm}
             darkMode={darkMode}
             disabled={disabled}
           />
           <InputGroupWithLock
-            label='Email'
-            name='email'
-            data={user?.email}
+            label="Email"
+            name="email"
+            autoComplete="email"
+            value={user?.email}
             handleForm={handleForm}
             darkMode={darkMode}
             disabled={disabled}
           />
-          <InputGroupWithLock
-            type='password'
-            label='Пароль'
-            name='password'
-            data={user?.password}
-            handleForm={handleForm}
-            darkMode={darkMode}
-            disabled={disabled}
-          />
+          {profile
+            ?  <InputPassGroup
+              label="Пароль"
+              name="password"
+              data={user?.password}
+              handleForm={handleForm}
+              darkMode={darkMode}
+              disabled={disabled}
+              setFormDisabled={setFormDisabled}
+            />
+            :   <InputGroupWithLock
+              type="password"
+              label="Пароль"
+              name="password"
+              autoComplete="new-password"
+              value={user?.password}
+              handleForm={handleForm}
+              darkMode={darkMode}
+              disabled={disabled}
+            />
+          }
         <fieldset disabled={disabled}>
           <div className="form-check form-switch">
             <input
@@ -108,11 +131,13 @@ export const ProfileForm: React.FC<ProfilePageProps>  = ({
             />
             <label className="form-check-label" htmlFor="isBlocked">Блокировка пользователя</label>
           </div>
+        </fieldset>
+        <fieldset disabled={(profile && user?.password) ? formDisabled : disabled}>
           <button
             type="submit"
             className={cn("btn btn-sm mt-4", {
-              "btn-outline-primary": disabled,
-              "btn-primary": !disabled,
+              "btn-outline-primary": disabled || (formDisabled && user?.password),
+              "btn-primary": !disabled || (!formDisabled && user?.password),
             })}
             onClick={(e) => handleSubmit(e)}
           >

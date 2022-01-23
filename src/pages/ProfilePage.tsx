@@ -1,68 +1,72 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React from 'react';
+import { AuthContext } from '../context/AuthContext';
 import { ThemeContext } from '../context/ThemeContext';
 import { ToastsContext } from '../context/ToastsContext';
-import { Pagination } from '../components/Pagination';
+import LOCAL_STORAGE from '../constants/index';
+import { ProfileForm } from '../components/ProfileForm';
+import { IUser } from '../types/User';
+import { useHttp } from '../hooks/useHttp';
+import { tokenChecker } from '../services/token-checker';
 // import cn from 'classnames';
-import CurrencyFormatter from '../services/currency-formatting';
 
 export const ProfilePage: React.FC = () => {
-    const { darkMode } = useContext(ThemeContext);
-    const { addToast } = useContext(ToastsContext);
-    const [ pagination, setPagination ] = useState({page: 1, limit: 10, total: 0, pages: 10, skip: 0})
-    const [body, setBody] = useState("");
-    const [price, setPrice] = React.useState(10);
+    const { darkMode } = React.useContext(ThemeContext);
+    const { userId, setInitials } = React.useContext(AuthContext);
+    const { addToast } = React.useContext(ToastsContext);
+    const { request, error } = useHttp();
+    const [user, setUser] = React.useState<IUser>();
 
-    const submit = (e: any) => {
-        if (e.key === "Enter"){
-            addToast("DangerToast", e.target.value, "danger", 3000);
-            setBody("");
-        }
-    }
+    const getUser = React.useCallback(
+        async (userId) => {
+            const header = await tokenChecker();
+            try {
+                const fetched: IUser = await request(`/api/user/${userId}`,'GET', null, header);
+                setUser(fetched);
+            } catch (err: any) {}
+        }, [request]);
 
-    const handlerPagination = useCallback((e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
-        setPagination({...pagination, [e.target.name]: e.target.name !== "current" ? parseInt(e.target.value) : parseInt(e.target.value) - 1 });
-
-    }, [pagination]);
+    const editUser = React.useCallback(
+        async (user) => {
+            const header = await tokenChecker();
+            try {
+                const fetched: IUser = await request(`/api/user/${userId}`,'PUT', {...user}, header);
+                setUser(fetched);
+                if (fetched.initials) {
+                    localStorage.setItem(LOCAL_STORAGE.INITIALS, JSON.stringify({initials: fetched?.initials }));
+                    setInitials(fetched.initials);
+                }
+            } catch (err: any) {
+                getUser(userId);
+            }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user]);
 
     React.useEffect(() => {
-        document.title = "Профиль";
-    }, []);
+        error !== null && addToast('Ошибка', `${error}`, 'danger', 10000);
+    }, [error, addToast]);
+
+    React.useEffect(() => {
+        if (userId !== null && tokenChecker()) {
+            try {
+                getUser(userId);
+            } catch (error) {
+                
+            }
+        }
+        document.title = `Профиль ${user?.fullName}`;
+        console.log({userId});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [userId]);
 
     return (
         <div className="container">
-            <input type="text" value={body} onChange={e => setBody(e.target.value)} onKeyPress={e => submit(e)}/>
-            <button className="btn btn-success" onClick={() => addToast("InfoToast", body, "info", 2000)}> добавить тостик</button>
-
-            <div>
-                <span>Пагинация </span>
-                <Pagination 
-                    pagination={pagination} 
-                    setPagination={setPagination} 
-                    darkMode={darkMode} 
-                />
-                <span>Пагинация окончена</span>
-                <div>
-                    <input 
-                        type="number" 
-                        name="page" 
-                        value={pagination.page} 
-                        min={1} max={pagination.pages} 
-                        onChange={e => handlerPagination(e)} 
-                        className="bg-dark text-white" 
-                    />
-                    <input type="number" name="pages" value={pagination.pages} min={1} onChange={e => handlerPagination(e)} />
-                </div>
-                <div className='mt-5'>
-                    <input 
-                        type="number"
-                        value={price}
-                        onChange={(e) => setPrice(parseInt(e.target.value))}
-                    />
-                    <div>
-                        <span>{CurrencyFormatter(price, 'USD', 'USA')}</span>
-                    </div>
-                </div>
-            </div>
+            <ProfileForm
+            profile={true}
+            user={user}
+            setUser={setUser}
+            editUser={editUser}
+            darkMode={darkMode}
+            />
         </div>
     )
 }

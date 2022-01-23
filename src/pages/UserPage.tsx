@@ -14,14 +14,14 @@ export const UserPage = React.memo(() => {
     const location = useLocation();
     const { request, error } = useHttp();
     const [user, setUser] = React.useState<IUser>();
-    // const [requestData, setRequestData] = React.useState();
 
-    const fetch = React.useCallback(
+    const getUser = React.useCallback(
         async () => {
             try {
                 const fetched: IUser = await request(`/api/user/${location.pathname.split('/')[2]}`,'GET', null, tokenChecker());
                 setUser(fetched);
             } catch (err: any) {}
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         }, []);
 
     const editUser = React.useCallback(
@@ -30,8 +30,9 @@ export const UserPage = React.memo(() => {
                 const fetched: IUser = await request(`/api/user/${location.pathname.split('/')[2]}`,'PUT', {...user}, tokenChecker());
                 setUser(fetched);
             } catch (err: any) {
-                fetch();
+                getUser();
             }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 
     React.useEffect(() => {
@@ -39,7 +40,7 @@ export const UserPage = React.memo(() => {
     }, [error, addToast]);
 
     React.useEffect(() => {
-        !user && fetch();
+        !user && getUser();
         document.title = user?.fullName || 'Пользователь';
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user?.fullName]);
@@ -48,7 +49,7 @@ export const UserPage = React.memo(() => {
         <>
             <div className="mb-2">
                 <span className="fw-lighter">
-                    {"на этом месте > мог быть ваш шикарный > breadchumb"}
+                    {"на этом месте > мог быть ваш шикарный > breadcrumb"}
                 </span>
             </div>
             <ProfileForm

@@ -1,5 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
+import { ThemeContext } from '../context/ThemeContext';
 import AUTH_ROUTES from '../constants/index';
 import SIMPLE_ROUTES from '../constants/index';
 import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
@@ -14,12 +16,10 @@ import {
   BrightnessHighFill, 
   BoxArrowRight 
 } from 'react-bootstrap-icons';
-import { AuthContext } from '../context/AuthContext';
-import { ThemeContext } from '../context/ThemeContext';
 
 const NavbarComponent = () => {
-  const auth = useContext(AuthContext);
-  const { darkMode, toggleDarkMode } = useContext(ThemeContext)
+  const auth = React.useContext(AuthContext);
+  const { darkMode, toggleDarkMode } = React.useContext(ThemeContext);
   const navigate = useNavigate();
   const menuStyle = darkMode ? 'dark' : 'light';
 
@@ -27,7 +27,6 @@ const NavbarComponent = () => {
     auth.logout();
     navigate(`/${SIMPLE_ROUTES.AUTH}`, {replace: true});
   }
-
   return (
   <Navbar variant={menuStyle} bg={menuStyle} expand="lg" fixed="top">
     <Container>
@@ -91,7 +90,7 @@ const NavbarComponent = () => {
           {darkMode ? <BrightnessHighFill fill="white" /> : <MoonFill />}
         </button>
         <NavDropdown
-          title={<span><PersonCircle size={30}/> {auth.email}</span>}
+          title={<span className="text-secondary"><PersonCircle size={30}/> {auth.initials}</span>}
           id="basic-nav-dropdown"
           menuVariant={menuStyle}
           menuRole=""

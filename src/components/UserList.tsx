@@ -6,6 +6,7 @@ import { ButtonEye } from './ButtonEye';
 import { Link } from 'react-router-dom';
 import AUTH_ROUTES from '../constants/index';
 import { TooltipWrapper } from './comp-utils/TooltipWrapper';
+import { LockFill } from 'react-bootstrap-icons';
 
 interface UserListProps {
   users: IUser[];
@@ -28,6 +29,7 @@ const UserList: React.FC<UserListProps> = React.memo(({ users, skip }) => {
         )}>
           <thead>
               <tr>
+                  <th scope="col"><LockFill /></th>
                   <th scope="col">#</th>
                   <th scope="col">ФИО</th>
                   <th scope="col">Email</th>
@@ -38,6 +40,9 @@ const UserList: React.FC<UserListProps> = React.memo(({ users, skip }) => {
           <tbody>
             {users.map((user, i: number) => (
               <tr key={user.email}>
+                <td className="d-flex justify-content-center">
+                  { user?.isBlocked ? <span className="btn btn-sm btn-danger"><LockFill /></span> : null }
+                </td>
                 <td> {/* array start from 0 need + 1 */}
                   {
                     (skip && skip > 0) 
