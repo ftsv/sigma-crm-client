@@ -79,6 +79,7 @@ export const InputPassGroup: React.FC<InputPassGroupProps> = (
               className="input-group-text"
               type="button"
               onClick={handlePassword}
+              disabled={disabled}
             >
               {showPass ? <EyeSlashFill /> : <EyeFill />}
             </button>
@@ -108,6 +109,7 @@ export const InputPassGroup: React.FC<InputPassGroupProps> = (
               className="input-group-text"
               type="button"
               onClick={handlePassword}
+              disabled={disabled}
             >
               {showPass ? <EyeSlashFill /> : <EyeFill />}
             </button>

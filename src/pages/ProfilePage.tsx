@@ -54,7 +54,6 @@ export const ProfilePage: React.FC = () => {
             }
         }
         document.title = `Профиль ${user?.fullName}`;
-        console.log({userId});
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userId]);
 

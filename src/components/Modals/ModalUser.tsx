@@ -104,6 +104,7 @@ export const ModalUser: React.FC<ModalProps> = ({
               id="item1" 
               aria-describedby="titleHelp"
               name="email"
+              autoComplete="email"
               value={item.email}
               onChange={(e) => handleForm(e)}
               required
@@ -118,6 +119,7 @@ export const ModalUser: React.FC<ModalProps> = ({
               id="item2" 
               aria-describedby="itemLNHelper"
               name="lastName"
+              autoComplete="family-name"
               value={item.lastName ? item.lastName : ''}
               onChange={(e) => handleForm(e)}
             />
@@ -131,6 +133,7 @@ export const ModalUser: React.FC<ModalProps> = ({
               id="itemN" 
               aria-describedby="itemNHelper"
               name="name"
+              autoComplete="given-name"
               value={item.name ? item.name : ''}
               onChange={(e) => handleForm(e)}
             />
@@ -145,6 +148,7 @@ export const ModalUser: React.FC<ModalProps> = ({
               id="item2" 
               aria-describedby="itemMNHelper"
               name="middleName"
+              autoComplete="additional-name"
               value={item.middleName ? item.middleName : ''}
               onChange={(e) => handleForm(e)}
             />
@@ -158,6 +162,7 @@ export const ModalUser: React.FC<ModalProps> = ({
               id="item3" 
               aria-describedby="item3Helper"
               name="password"
+              autoComplete="new-password"
               value={item.password}
               onChange={(e) => handleForm(e)}
               required

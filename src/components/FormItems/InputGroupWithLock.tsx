@@ -13,6 +13,7 @@ interface InputGroupWithLockProps {
   disabled?: boolean;
   type?: 'text' | 'email' | 'password';
   autoComplete?: 'off' | 'email' | 'new-password' | 'current-password' | 'family-name' | 'given-name' | 'additional-name';
+  locker?: boolean;
 }
 
 export const InputGroupWithLock: React.FC<InputGroupWithLockProps> = (
@@ -25,6 +26,7 @@ export const InputGroupWithLock: React.FC<InputGroupWithLockProps> = (
     disabled = false,
     type = 'text',
     autoComplete = 'off',
+    locker=true,
   }): JSX.Element => {
   return (
     <fieldset disabled={ disabled }>
@@ -44,9 +46,16 @@ export const InputGroupWithLock: React.FC<InputGroupWithLockProps> = (
           onChange={ ( e ) => handleForm( e ) }
           autoComplete={autoComplete}
         />
-        <span className="align-center ps-2 pe-2">
-          { disabled ? <Lock /> : <Unlock /> }
-        </span>
+        {locker 
+          ? (
+            <span className="align-center ps-2 pe-2">
+              { disabled ? <Lock /> : <Unlock /> }
+            </span>
+          )
+          : null
+
+        }
+        
       </div>
     </fieldset>
 

@@ -4,6 +4,7 @@ import { ProfilePage } from "./pages/ProfilePage";
 import { UsersPage } from "./pages/UsersPage";
 import { UserPage } from "./pages/UserPage";
 import { ClientsPage } from "./pages/ClientsPage";
+import { ClientPage } from "./pages/ClientPage";
 import { CategoryPage } from "./pages/CategoryPage";
 import { Todos } from "./pages/Todos";
 import React from 'react';
@@ -39,6 +40,7 @@ export const Routing: React.FC<RoutingProps> = ({auth}): JSX.Element => {
         {path: `/${AUTH_ROUTES.USERS}`, element: <UsersPage />},
         {path: `/${AUTH_ROUTES.USER}/:id`, element: <UserPage />},
         {path: `/${AUTH_ROUTES.CATEGORY}`, element: <CategoryPage />},
+        {path: `/${AUTH_ROUTES.CLIENT}/:id`, element: <ClientPage />},
         {path: `/${AUTH_ROUTES.CLIENTS}`, element: <ClientsPage />},
         {path: `/${AUTH_ROUTES.CASES}`, element: <CasesPage />},
         {path: `/${AUTH_ROUTES.CASE}/:id`, element: <CasePage />},

@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
 import cn from 'classnames';
 interface IPagination {
@@ -174,6 +175,8 @@ export const Pagination: React.FC<PaginationProps>  = React.memo(({
                     </span>
                   </li>)
               }
+
+              return null;
             }) || null}
           </ul>
         </nav>

@@ -1,6 +1,8 @@
 import React from 'react';
 import cn from 'classnames';
-import { ClientsRowProps } from '../types/Tables/ClientsRowProps';
+import AUTH_ROUTES from '../constants';
+// import { ClientsRowProps } from '../types/Tables/ClientsRowProps';
+import { ClientProps } from '../dbsEmule/clientsDB';
 import { Link } from 'react-router-dom';
 import { ButtonEye } from '../components/ButtonEye';
 
@@ -37,7 +39,7 @@ export const Table: React.FC<TableProps> = React.memo(({ tableHeader, tableRows,
                 </thead>
                 <tbody>
                     {tableRows?.length
-                        ? tableRows.map((row: ClientsRowProps, i: number) => (
+                        ? tableRows.map((row: ClientProps, i: number) => (
                             <tr key={row.fullName}>
                                 <td>
                                     {skip
@@ -50,18 +52,22 @@ export const Table: React.FC<TableProps> = React.memo(({ tableHeader, tableRows,
                                     <span>{row.contacts}</span>
                                 </td>
                                 <td>
-                                    {row.cases.length
-                                        ? row.cases.map((item: string) => (
-                                            <span key={item}> <Link to={ `/case/${item}` }>{item}</Link></span>
-                                        ))
-                                        : ""
-                                    }
+                                    {`${row.identityDocument.type}
+ серия: ${row.identityDocument.series} № ${row.identityDocument.number}
+ выдан ${row.identityDocument.issuedBy}`}
                                 </td>
                                 <td>
-                                    {row.manager}
+                                    <Link to={ `/${AUTH_ROUTES.USER}/${row.manager.id}` }  className="text-decoration-none">
+                                        {row.manager.initials}
+                                    </Link>
                                 </td>
                                 <td>
-                                    <ButtonEye darkMode={darkMode}/>
+                                    <Link to={ `/${AUTH_ROUTES.CLIENT}/${row.id}` }  className="text-decoration-none">
+                                        <ButtonEye
+                                            darkMode={darkMode}
+                                        />
+                                    </Link>
+                                    
                                 </td>
                             </tr>
                         ))

@@ -2,6 +2,7 @@ const AUTH = 'auth';
 const CASE = 'case';
 const CASES = 'cases';
 const CATEGORY = 'category';
+const CLIENT = 'client';
 const CLIENTS = 'clients';
 const INITIALS = 'initials';
 const PROFILE = 'profile';
@@ -15,6 +16,7 @@ const AUTH_ROUTES = {
     CASE,
     CASES,
     CATEGORY,
+    CLIENT,
     CLIENTS,
     PROFILE,
     USER,
