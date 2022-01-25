@@ -4,38 +4,32 @@ export const dataCases = [
     {
         id: '220112-1',
         totalCost: 41000,
+        clientId: 'dad324324hjk1h4',
         category: 'Трудовые споры',
-        client: dataClients[0],
     }, {
         id: '220110-2',
         totalCost: 60000000,
-        client: dataClients[1],
+        clientId: 'dsa1332dadddas34124gjh341',
         category: 'Защита прав потребителей',
     }, {
         id: '220110-1',
         totalCost: 15000,
-        client: dataClients[1],
+        clientId: 'dsa1332dadddas34124gjh341',
         category: 'Защита прав потребителей',
     }, {
         id: '220109-1',
         totalCost: 15000,
-        client: dataClients[2],
+        clientId: '4n12j4njk31244j3',
         category: 'Банкротство',
     }, {
         id: '220109-12',
         totalCost: 45000,
-        client: {
-            id: '4n12j431njk3432431244j3',
-            fullName: 'Сидоренко Ольга Николаевна',
-        },
+        clientId: '4n12j4njk31244j3',
         category: 'Семейное право',
     }, {
         id: '220119-12',
         totalCost: 55000,
-        client: {
-            id: '43123n12j4njk3432431244j3',
-            fullName: 'Петрищева Олеся Петровна',
-        },
+        clientId: '43123n12j4njk3432431244j3',
         category: 'Займы',
     },
 ];

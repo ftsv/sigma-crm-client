@@ -11,6 +11,7 @@ interface ProfilePageProps {
   editUser: (user: IUser) => void;
   darkMode?: boolean;
   profile?: boolean;
+  col?: string;
 }
 
 export const ProfileForm: React.FC<ProfilePageProps>  = ({
@@ -26,6 +27,7 @@ export const ProfileForm: React.FC<ProfilePageProps>  = ({
   editUser,
   darkMode = false,
   profile = false,
+  col = '',
 }): JSX.Element => {
   const [disabled, setDisabled] = React.useState(true);
   const [formDisabled, setFormDisabled] = React.useState(true);
@@ -54,7 +56,10 @@ export const ProfileForm: React.FC<ProfilePageProps>  = ({
   return (
     <div>
       <form>
-        <legend className="mt-3 mb-3">Профиль пользователя <strong>{user?.fullName || ""}</strong></legend>
+        <legend className="mt-3 mb-3">
+          <div>Профиль пользователя</div>
+          <strong>{user?.fullName || ""}</strong>
+        </legend>
         <span
           className="btn btn-sm btn-outline-secondary mt-3 mb-3 align-center"
           onClick={handleDisable}
@@ -70,6 +75,7 @@ export const ProfileForm: React.FC<ProfilePageProps>  = ({
             handleForm={handleForm}
             darkMode={darkMode}
             disabled={disabled}
+            col={col}
           />
           <InputGroupWithLock
             label="Имя"
@@ -79,6 +85,7 @@ export const ProfileForm: React.FC<ProfilePageProps>  = ({
             handleForm={handleForm}
             darkMode={darkMode}
             disabled={disabled}
+            col={col}
           />
           <InputGroupWithLock
             label="Отчество"
@@ -88,6 +95,7 @@ export const ProfileForm: React.FC<ProfilePageProps>  = ({
             handleForm={handleForm}
             darkMode={darkMode}
             disabled={disabled}
+            col={col}
           />
           <InputGroupWithLock
             label="Email"
@@ -97,6 +105,7 @@ export const ProfileForm: React.FC<ProfilePageProps>  = ({
             handleForm={handleForm}
             darkMode={darkMode}
             disabled={disabled}
+            col={col}
           />
           {profile
             ?  <InputPassGroup
@@ -107,6 +116,7 @@ export const ProfileForm: React.FC<ProfilePageProps>  = ({
               darkMode={darkMode}
               disabled={disabled}
               setFormDisabled={setFormDisabled}
+              col={col}
             />
             :   <InputGroupWithLock
               type="password"
@@ -117,6 +127,7 @@ export const ProfileForm: React.FC<ProfilePageProps>  = ({
               handleForm={handleForm}
               darkMode={darkMode}
               disabled={disabled}
+              col={col}
             />
           }
         <fieldset disabled={disabled}>

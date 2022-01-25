@@ -9,12 +9,13 @@ import { useHttp } from '../hooks/useHttp';
 import currencyFormatter from '../services/currency-formatting';
 // import { Spinner } from 'react-bootstrap';
 // import { Pagination } from '../components/Pagination';
-import { dataCases } from '../dbsEmule/casesDB';
+import DatabaseEmulator from '../dbsEmule/Database_Emulator';
+import { CaseListItemProps } from '../dbsEmule/Database_Models';
 
 interface FilterProps {
     position?: 'start' | 'center' | 'end' | 'between';
-    initData: CasesProps[]; // изменить под варианты
-    setFilteredCases: (data: CasesProps[]) => void;
+    initData: CaseListItemProps[]; // изменить под варианты
+    setFilteredCases: (data: CaseListItemProps[]) => void;
     darkMode?: boolean;
 }
 
@@ -45,7 +46,7 @@ const Filter: React.FC<FilterProps> = ({
                 break;
             case 'familyName':
                 filtered = initData.filter(
-                    (element) => element.client.fullName.toLowerCase().includes(e.target.value.toLowerCase())
+                    (element) => element.client?.fullName.toLowerCase().includes(e.target.value.toLowerCase())
                 );
                 setFilteredCases(filtered);
                 break;
@@ -79,34 +80,26 @@ const Filter: React.FC<FilterProps> = ({
     )
 }
 
-interface CaseClientProps {
-    id: string;
-    fullName: string;
-}
-interface CasesProps {
-    id: string;
-    totalCost: number;
-    client: CaseClientProps;
-    category: string;
-}
-
 export const CasesPage: React.FC = (): JSX.Element => {
     // const auth = React.useContext( AuthContext );
     const { darkMode } = React.useContext(ThemeContext);
     const { addToast } = React.useContext(ToastsContext);
-    const { request, error, loading } = useHttp();
-    const [cases, setCases] = React.useState<CasesProps[]>([]);
-    const [filteredCases, setFilteredCases] = React.useState<CasesProps[]>([]);
+    // const { request, error, loading } = useHttp();
+    const [cases, setCases] = React.useState<CaseListItemProps[]>([]);
+    const [filteredCases, setFilteredCases] = React.useState<CaseListItemProps[]>([]);
     // const [pagination, setPagination] = React.useState({page: 1, limit: 10, total: 0, pages: 0, skip: 0}); // возможно необходимо сделать контекст фильтра в localStorage для первичного отображения
 
     React.useEffect(() => {
-        setCases(dataCases);
-        setFilteredCases(dataCases);
+        const fetchedCases = DatabaseEmulator.getCases();
+        if (fetchedCases) {
+            setCases(fetchedCases);
+            setFilteredCases(fetchedCases);
+        }
     },[]);
 
-    React.useEffect(() => {
-        error !== null && addToast('Ошибка', `${error}`, 'danger',7000);
-    }, [error, addToast]);
+    // React.useEffect(() => {
+    //     error !== null && addToast('Ошибка', `${error}`, 'danger',7000);
+    // }, [error, addToast]);
 
     React.useEffect(() => {
         document.title = "Дела";
@@ -149,7 +142,7 @@ export const CasesPage: React.FC = (): JSX.Element => {
                             <span className="text-secondary">{ item.category }</span>
                         </div>
                         <div>
-                            <Link to={ `/${AUTH_ROUTES.CLIENT}/${item.client.id}` }  className="text-decoration-none">{ item.client.fullName }</Link>
+                            <Link to={ `/${AUTH_ROUTES.CLIENT}/${item.client?.id}` }  className="text-decoration-none">{ item.client?.fullName }</Link>
                         </div>
                     </div>
                 ))

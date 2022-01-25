@@ -2,9 +2,9 @@ import React from 'react';
 import cn from 'classnames';
 import AUTH_ROUTES from '../constants';
 // import { ClientsRowProps } from '../types/Tables/ClientsRowProps';
-import { ClientProps } from '../dbsEmule/clientsDB';
 import { Link } from 'react-router-dom';
 import { ButtonEye } from '../components/ButtonEye';
+import { ClientProps } from '../dbsEmule/Database_Models';
 
 interface TableProps {
     tableHeader: TableHeadersProps[];

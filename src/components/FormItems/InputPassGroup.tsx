@@ -13,6 +13,7 @@ interface InputPassGroupProps {
   darkMode?: boolean;
   disabled?: boolean;
   setFormDisabled: (formDisabled: boolean) => void;
+  col?: string;
 }
 
 export const InputPassGroup: React.FC<InputPassGroupProps> = (
@@ -24,6 +25,7 @@ export const InputPassGroup: React.FC<InputPassGroupProps> = (
     darkMode = false,
     disabled = false,
     setFormDisabled,
+    col = '',
   }): JSX.Element => {
     const [showPass, setShowPass] = React.useState(false);
     const [type, setType] = React.useState('password');
@@ -60,7 +62,7 @@ export const InputPassGroup: React.FC<InputPassGroupProps> = (
     <div>
       <fieldset disabled={disabled}>
         <div className="input-group input-group-sm mb-3">
-          <span className="input-group-text">
+          <span className={`input-group-text ${col} justify-content-end`}>
             {label}
           </span>
           <input 
@@ -90,7 +92,7 @@ export const InputPassGroup: React.FC<InputPassGroupProps> = (
       </fieldset>
       <fieldset disabled={disabled}>
         <div className="input-group input-group-sm mb-3">
-          <span className="input-group-text">
+          <span className={`input-group-text ${col} justify-content-end`}>
             {`${label} (проверка)`}
           </span>
           <input 

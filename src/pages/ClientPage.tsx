@@ -1,17 +1,18 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { InputGroupWithLock } from '../components/FormItems/InputGroupWithLock';
-import { dataClients, ClientProps } from '../dbsEmule/clientsDB';
+import DatabaseEmulator from '../dbsEmule/Database_Emulator';
+import { ClientProps } from '../dbsEmule/Database_Models';
 
 
 export const ClientPage = ():JSX.Element => {
     const location = useLocation();
     const [client, setClient] = React.useState<ClientProps>({
         id: '',
-        fullName: '',
+        fullName: 'ОТСУТСТВУЕТ В БАЗЕ :(',
         contacts: '',
         identityDocument: {
-            type: 'Пасспорт',
+            type: 'Паспорт',
             series: '0406',
             number: 123456,
             issuedBy: '',
@@ -29,9 +30,13 @@ export const ClientPage = ():JSX.Element => {
     }
 
     React.useEffect(() => {
-        const dbData = dataClients.filter((element) => element.id == location.pathname.split('/')[2])[0];
-        setClient(dbData);
-        document.title = `Клиент ${dbData.fullName}`;
+
+        const dbData = DatabaseEmulator.getClient(location.pathname.split('/')[2]);
+        // const dbData = dataClients.filter((element) => element.id == location.pathname.split('/')[2])[0];
+        if (dbData) {
+            setClient(dbData);
+            document.title = `Клиент ${dbData.fullName}`;
+        }
     }, []);
     return (
         <>
@@ -51,8 +56,8 @@ export const ClientPage = ():JSX.Element => {
                 />
             </div>
             <div>
-                {client.cases.length ? client.cases.map((item) => (
-                    <span className="me-2">{item.id}</span>
+                {client.cases?.length ? client.cases.map((item) => (
+                    <span key={item.id} className="me-2">{item.id}</span>
                 ))
                 : null
                 }

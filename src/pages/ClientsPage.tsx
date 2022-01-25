@@ -4,7 +4,8 @@ import { ThemeContext } from '../context/ThemeContext';
 import { Table } from '../containers/Table';
 import { Pagination } from '../components/Pagination';
 import { ClientsRowProps } from '../types/Tables/ClientsRowProps';
-import { dataClients, ClientProps } from '../dbsEmule/clientsDB';
+import { dataClients } from '../dbsEmule/clientsDB';
+import { ClientProps } from '../dbsEmule/Database_Models';
 
 
 
