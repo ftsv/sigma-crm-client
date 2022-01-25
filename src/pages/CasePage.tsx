@@ -3,14 +3,14 @@ import { useLocation } from 'react-router-dom';
 
 export const CasePage: React.FC = (): JSX.Element => {
     const location = useLocation();
-    console.log(location);
+    const caseNum = location.pathname.split('/')[2];
 
     React.useEffect(() => {
-        document.title = `Дело `;
+        document.title = `Дело ${caseNum}`;
     }, []);
     return (
         <>
-            <span>{`ДЕЛО № ${location.pathname.split('/')[2]}`}</span>
+            <span>{`ДЕЛО № ${caseNum}`}</span>
         </>
     )
 }

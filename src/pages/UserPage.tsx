@@ -57,6 +57,7 @@ export const UserPage = React.memo(() => {
                 setUser={setUser}
                 editUser={editUser}
                 darkMode={darkMode}
+                col="col-1"
             />
         </>
     )

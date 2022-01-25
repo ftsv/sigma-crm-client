@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import AUTH_ROUTES from '../constants';
 
 export const useHttp = () => {
   const [loading, setLoading] = React.useState(false);
@@ -37,6 +38,7 @@ export const useHttp = () => {
     } catch (e: any) {
       setLoading(false)
       e.message === 'Нет авторизации' && logout();
+      e.message === 'Пользователь не найден' && navigate(`/${AUTH_ROUTES.USERS}`, {replace: true});;
       setError(e.message)
       throw e
     }

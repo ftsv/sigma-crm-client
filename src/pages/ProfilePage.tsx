@@ -10,8 +10,8 @@ import { tokenChecker } from '../services/token-checker';
 // import cn from 'classnames';
 
 export const ProfilePage: React.FC = () => {
-    const { darkMode } = React.useContext(ThemeContext);
-    const { userId, setInitials } = React.useContext(AuthContext);
+    const { darkMode, toggleDarkMode } = React.useContext(ThemeContext);
+    const { userId, initials, setInitials } = React.useContext(AuthContext);
     const { addToast } = React.useContext(ToastsContext);
     const { request, error } = useHttp();
     const [user, setUser] = React.useState<IUser>();
@@ -41,6 +41,10 @@ export const ProfilePage: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 
+    const handleTheme = (e: string) => {
+
+    }
+
     React.useEffect(() => {
         error !== null && addToast('Ошибка', `${error}`, 'danger', 10000);
     }, [error, addToast]);
@@ -54,19 +58,28 @@ export const ProfilePage: React.FC = () => {
             }
         }
         document.title = `Профиль ${user?.fullName}`;
-        console.log({userId});
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [userId]);
+    }, [userId, user?.fullName]);
 
     return (
         <div className="container">
-            <ProfileForm
-            profile={true}
-            user={user}
-            setUser={setUser}
-            editUser={editUser}
-            darkMode={darkMode}
-            />
+            <div className="row">
+                <div className="col-lg-6">
+                    <ProfileForm
+                        profile={true}
+                        user={user}
+                        setUser={setUser}
+                        editUser={editUser}
+                        darkMode={darkMode}
+                        col="col-4"
+                    />
+                </div>
+        <div className="col-lg-6 mt-5">
+            <div className="mt-2">
+            Настройки фильтров и приоритетов
+            </div>
+        </div>
+            </div>
         </div>
     )
 }
